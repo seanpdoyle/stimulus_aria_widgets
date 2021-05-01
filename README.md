@@ -5,13 +5,21 @@ Short description and motivation.
 How to use my plugin.
 
 ## Installation
-Add this line to your application's Gemfile:
+
+Add the `stimulus_aria_widgets` dependency to your application's Gemfile:
 
 ```ruby
 gem 'stimulus_aria_widgets'
 ```
 
+Additionally, depend on `action_view-attributes_and_token_lists`:
+
+```ruby
+gem 'action_view-attributes_and_token_lists', github: 'seanpdoyle/action_view-attributes_and_token_lists', branch: 'main'
+```
+
 And then execute:
+
 ```bash
 $ bundle
 ```
