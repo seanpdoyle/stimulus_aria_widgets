@@ -1,46 +1,50 @@
 import { Controller } from "stimulus"
 
 export default class extends Controller {
-  observer!: MutationObserver
+  static targets = [ "article" ]
 
-  initialize() {
-    this.observer = new MutationObserver(this.refreshArticles)
-  }
+  articleTargets!: HTMLElement[]
 
   connect() {
     this.element.setAttribute("role", "feed")
-    this.refreshArticles()
-    this.observer.observe(this.element, { childList: true })
   }
 
-  disconnect() {
-    this.observer.disconnect()
+  articleTargetConnected(target: HTMLElement) {
+    updateSetSize(this.element, this.articleTargets)
+
+    if (!/article/.test(target.localName)) target.setAttribute("role", "article")
+
+    target.setAttribute("tabindex", "0")
+  }
+
+  articleTargetDisconnected() {
+    updateSetSize(this.element, this.articleTargets)
   }
 
   navigate(event: KeyboardEvent) {
     const { ctrlKey, key, target } = event
 
-    if (target instanceof Element) {
-      const article = this.articleElements.find(element => element.contains(target))
+    if (target instanceof HTMLElement) {
+      const article = this.articleTargets.find(element => element.contains(target))
 
       if (article) {
-        const index = this.articleElements.indexOf(article)
+        const index = this.articleTargets.indexOf(article)
         const firstIndex = 0
-        const lastIndex = this.articleElements.length - 1
+        const lastIndex = this.articleTargets.length - 1
         let nextArticle
 
         switch (key) {
           case "PageUp":
-            nextArticle = this.articleElements[Math.max(firstIndex, index - 1)]
+            nextArticle = this.articleTargets[Math.max(firstIndex, index - 1)]
             break
           case "PageDown":
-            nextArticle = this.articleElements[Math.min(lastIndex, index + 1)]
+            nextArticle = this.articleTargets[Math.min(lastIndex, index + 1)]
             break
           case "Home":
-            if (ctrlKey) nextArticle = this.articleElements[firstIndex]
+            if (ctrlKey) nextArticle = this.articleTargets[firstIndex]
             break
           case "End":
-            if (ctrlKey) nextArticle = this.articleElements[lastIndex]
+            if (ctrlKey) nextArticle = this.articleTargets[lastIndex]
             break
         }
 
@@ -51,18 +55,12 @@ export default class extends Controller {
       }
     }
   }
+}
 
-  private refreshArticles = () => {
-    const size = this.articleElements.length + 1
-    this.element.setAttribute("aria-setsize", size.toString())
+function updateSetSize(element: Element, targets: HTMLElement[]) {
+  element.setAttribute("aria-setsize", targets.length.toString())
 
-    this.articleElements.forEach((element, index) => {
-      element.setAttribute("tabindex", "0")
-      element.setAttribute("aria-posinset", (index + 1).toString())
-    })
-  }
-
-  private get articleElements(): HTMLElement[] {
-    return Array.from(this.element.querySelectorAll<HTMLElement>("* > article, * > [role=article]"))
-  }
+  targets.forEach((target, index) => {
+    target.setAttribute("aria-posinset", (index + 1).toString())
+  })
 }

@@ -279,13 +279,19 @@ application.register("feed", FeedController)
 * `data-action="keydown->feed#navigate"`
 * `role="feed"`
 
+Targets:
+
+`aria.feed.article_target` embeds attributes:
+
+* `data-feed-target="article"`
+
 ```html+erb
 <a href="#feed">Skip to #feed</a>
 
 <div <%= aria.feed %> id="feed">
-  <article>First article</article>
-  <article>Second article</article>
-  <article>Third article</article>
+  <article <%= aria.feed.article_target %>>First article</article>
+  <article <%= aria.feed.article_target %>>Second article</article>
+  <article <%= aria.feed.article_target %>>Third article</article>
 </div>
 ```
 

@@ -55,10 +55,16 @@
 
 <a href="#feed" data-turbo="false">Skip to #feed</a>
 
-<%= aria.feed.tag(id: "feed") do %>
-  <article>First article</article>
-  <article>Second article</article>
-  <article>Third article</article>
+<%= aria.feed.tag id: "feed" do %>
+  <%= aria.feed.article_target.tag.article id: "article_1" do %>
+    First article
+  <% end %>
+  <%= aria.feed.article_target.tag.article id: "article_2" do %>
+    Second article
+  <% end %>
+  <%= aria.feed.article_target.tag.article id: "article_3" do %>
+    Third article
+  <% end %>
 <% end %>
 
 <hr>

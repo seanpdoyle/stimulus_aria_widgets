@@ -15,13 +15,11 @@ module Stimulus
       self.element_attributes = element_attributes.merge attributes
     end
 
-    def self.target(name, callable = nil, &block)
-      method_name = name.to_s.delete_suffix "_target"
-
-      define_method [ method_name, :target ].join(separator) do
+    def self.target(name, callable = nil, **attributes, &block)
+      define_method [ name, :target ].join(separator) do
         attribute = [ identifier, :target ].join(separator)
 
-        overrides = [ callable, block, -> { {} } ].detect(&:present?).call
+        overrides = [ callable, block, -> { attributes } ].compact.first.call
 
         @view_context.tag.attributes(data: { attribute => @view_context.token_list(name) }).merge(overrides)
       end
@@ -32,7 +30,7 @@ module Stimulus
     end
 
     def self.identifier
-      self.name.demodulize.underscore.delete_suffix "_controller"
+      name.demodulize.underscore.delete_suffix "_controller"
     end
 
     def initialize(view_context, **element_data_attributes)
