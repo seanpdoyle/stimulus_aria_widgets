@@ -3,11 +3,11 @@
   dialog[open]  { display: block; }
 </style>
 
-<button aria-expanded="false" aria-controls="dialog" type="button" data-controller="disclosure" data-action="click->disclosure#toggle">
+<%= tag.button aria: { controls: "dialog" }, **aria.disclosure do %>
   Open Dialog
-</button>
+<% end %>
 
-<dialog id="dialog" data-controller="dialog">
+<%= tag.dialog id: "dialog", **aria.dialog do %>
   <h1 id="dialog-title">Modal Dialog</h1>
 
   <form>
@@ -25,13 +25,13 @@
     <button type="submit" formmethod="dialog">Cancel</button>
     <button type="submit">Submit</button>
   </form>
-</dialog>
+<% end %>
 
 <hr>
 
-<button aria-expanded="false" aria-controls="details" type="button" data-controller="disclosure" data-action="click->disclosure#toggle">
+<%= tag.button aria: { controls: "details" }, **aria.disclosure do %>
   Open Details
-</button>
+<% end %>
 
 <details id="details">
   <summary>Summary</summary>
@@ -39,15 +39,15 @@
   Details
 </details>
 
-<button aria-expanded="false" aria-controls="css-class" type="button" data-controller="disclosure" data-disclosure-expanded-class="expanded" data-action="click->disclosure#toggle">
+<%= tag.button aria: { controls: "css-class" }, **aria.disclosure(expanded_class: "expanded") do %>
   Toggle CSS class
-</button>
+<% end %>
 
 <div id="css-class">CSS class</div>
 
-<button aria-controls="hidden" type="button" data-controller="disclosure" data-action="click->disclosure#toggle">
+<%= aria.disclosure.tag.button aria: { controls: "hidden" } do %>
   Toggle Hidden
-</button>
+<% end %>
 
 <div id="hidden">Visible</div>
 
@@ -55,24 +55,25 @@
 
 <a href="#feed" data-turbo="false">Skip to #feed</a>
 
-<div id="feed" data-controller="feed" data-action="keydown->feed#navigate">
+<%= tag.div id: "feed", **aria.feed do %>
   <article>First article</article>
   <article>Second article</article>
   <article>Third article</article>
-</div>
+<% end %>
 
 <hr>
 
-<form data-controller="combobox form" data-action="input->form#requestSubmit input->combobox#expand" data-turbo-frame="names">
+<%= tag.form aria.combobox.merge(data: { controller: "form", action: "input->form#requestSubmit", turbo_frame: "names" }) do %>
   <button type="button" data-action="click->combobox#expand">Expand combobox</button>
-  <label for="query">Names</label>
-  <input id="query" type="search" name="query" role="combobox" aria-expanded="<%= params[:query].present? %>" data-combobox-target="combobox" data-action="keydown->combobox#navigate">
 
-  <turbo-frame id="names" role="listbox" data-combobox-target="listbox">
+  <label for="query">Names</label>
+  <input id="query" <%= aria.combobox.combobox_target %> type="search" name="query" aria-expanded="<%= params[:query].present? %>">
+
+  <turbo-frame <%= aria.combobox.listbox_target %> id="names">
     <% if params[:query].present? %>
       <% %w[ Alan Alex Alice Barbara Bill Bob ].filter { |name| name.starts_with? params[:query] }.each_with_index do |name, id| %>
-        <button id="name_<%= id %>" type="button" role="option" aria-selected="<%= id.zero? %>" data-combobox-target="option"><%= name %></button>
+        <button id="name_<%= id %>" type="button" <%= aria.combobox.option_target %> aria-selected="<%= id.zero? %>"><%= name %></button>
       <% end %>
     <% end %>
   </turbo-frame>
-</form>
+<% end %>

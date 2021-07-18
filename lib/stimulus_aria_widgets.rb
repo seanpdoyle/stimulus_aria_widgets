@@ -1,6 +1,9 @@
-require "stimulus_aria_widgets/version"
-require "stimulus_aria_widgets/engine"
+require "zeitwerk"
+loader = Zeitwerk::Loader.for_gem
+loader.setup
 
 module StimulusAriaWidgets
   # Your code goes here...
 end
+
+loader.eager_load

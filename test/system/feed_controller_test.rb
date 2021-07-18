@@ -12,13 +12,13 @@ class FeedControllerTest < ApplicationSystemTestCase
     send_keys([:control, :home]).then { assert_article "First article", focused: true }
 
     append <<~HTML, into: "feed"
-      <article data-feed-target="article">Fourth article</article>
+      <p role="article">Fourth article</p>
     HTML
 
     send_keys([:control, :end]).then   { assert_article "Fourth article", focused: true }
   end
 
   def assert_article(locator, **options)
-    assert_css "article", text: locator, **options
+    assert_css %{article, [role="article"]}, text: locator, **options
   end
 end
