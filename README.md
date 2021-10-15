@@ -226,7 +226,7 @@ application.register("dialog", DialogController)
 `aria.dialog` embeds attributes on the root element:
 
 * `data-controller="dialog"`
-* `aria-model="true"`
+* `aria-modal="true"`
 * `role="dialog"`
 
 ```html+erb
