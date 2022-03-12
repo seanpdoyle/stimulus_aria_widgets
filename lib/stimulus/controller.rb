@@ -29,6 +29,10 @@ module Stimulus
       class_names.each { |class_name| allowed_element_data_attributes.add([ class_name, :class ].join(separator)) }
     end
 
+    def self.values(*values)
+      values.each { |value| allowed_element_data_attributes.add([ value, :value ].join(separator)) }
+    end
+
     def self.identifier
       name.demodulize.underscore.delete_suffix "_controller"
     end

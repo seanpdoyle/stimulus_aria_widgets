@@ -111,14 +111,14 @@ Targets:
 
 `aria.combobox.combobox_target` embeds attributes:
 
+* `role="combobox"`
 * `data-combobox-target="combobox"`
 * `data-action="keydown->combobox#navigate"`
-* `role="combobox"`
 
 `aria.combobox.listbox_target` embeds attributes:
 
-* `data-combobox-target="listbox"`
 * `role="listbox"`
+* `data-combobox-target="listbox"`
 
 `aria.combobox.option_target` embeds attributes:
 
@@ -227,9 +227,9 @@ application.register("dialog", DialogController)
 
 `aria.dialog` embeds attributes on the root element:
 
+* `role="dialog"`
 * `data-controller="dialog"`
 * `aria-model="true"`
-* `role="dialog"`
 
 Call to `aria.dialog.tag` default to rendering `<dialog>` elements
 
@@ -275,9 +275,9 @@ application.register("feed", FeedController)
 
 `aria.feed` embeds attributes on the root element:
 
+* `role="feed"`
 * `data-controller="feed"`
 * `data-action="keydown->feed#navigate"`
-* `role="feed"`
 
 Targets:
 
@@ -298,6 +298,82 @@ Targets:
 #### Actions
 
 * `navigate(KeyboardEvent)`
+
+### [Tabs](https://www.w3.org/TR/wai-aria-practices-1.2/#tabpanel)
+
+View content nested within [role="tabpanel"][] elements by navigating
+a collection of [role="tab"][] elements nested within a [role="tablist"][]
+element.
+
+[role="tabpanel"]: https://www.w3.org/TR/wai-aria-1.2/#tabpanel
+[role="tab"]: https://www.w3.org/TR/wai-aria-1.2/#tab
+[role="tablist"]: https://www.w3.org/TR/wai-aria-1.2/#tablist
+
+```js
+import { Application, Controller } from "stimulus"
+import { TabsController } from "stimulus_aria_widgets"
+
+const application = Application.start()
+application.register("tabs", TabsController)
+```
+
+#### Helpers
+
+`aria.tabs(defer_selection_value: Boolean)` embeds attributes on the root element:
+
+* `data-controller="tabs"`
+
+Targets:
+
+`aria.tabs.tablist_target` embeds attributes:
+
+* `role="tablist"`
+* `data-tabs-target="tablist"`
+* `data-action="keydown->tabs#navigate"`
+
+`aria.tabs.tab_target` embeds attributes:
+
+* `role="tab"`
+* `data-tabs-target="tab"`
+* `data-action="click->tabs#select"`
+
+`aria.tabs.tabpanel_target` embeds attributes:
+
+* `role="tabpanel"`
+* `data-tabs-target="tabpanel"`
+
+When `defer_selection_value:` is provided, embeds:
+
+* `data-tabs-defer-selection-value`
+
+```html+erb
+<div <%= aria.tabs %> id="tabs">
+  <div <%= aria.tabs.tablist_target %> id="tabs-tablist">
+    <button <%= aria.tabs.tab_target %> id="tabs-first-tab" type="button"
+            aria-controls="tabs-first-tabpanel">
+      First tab
+    </button>
+
+    <button <%= aria.tabs.tab_target %> id="tabs-second-tab" type="button"
+            aria-controls="tabs-second-tabpanel">
+      Second tab
+    </button>
+  </div>
+
+  <div <%= aria.tabs.tabpanel_target %> id="tabs-first-tabpanel">
+    First panel content
+  </div>
+
+  <div <%= aria.tabs.tabpanel_target %> id="tabs-second-tabpanel">
+    Second panel content
+  </div>
+</div>
+```
+
+#### Actions
+
+* `navigate(KeyEvent)`
+* `select(Event)`
 
 ## Configuration
 

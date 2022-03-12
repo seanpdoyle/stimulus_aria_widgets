@@ -83,3 +83,98 @@
     <% end %>
   </turbo-frame>
 <% end %>
+
+<hr>
+
+<a href="#tabs-horizontal" data-turbo="false">Skip to #tabs-horizontal</a>
+
+<%= aria.tabs.tag id: "tabs-horizontal" do %>
+  <%= aria.tabs.tablist_target.tag.div id: "tabs-horizontal-tablist" do %>
+    <%= aria.tabs.tab_target.tag.button id: "tabs-horizontal-first-tab", type: "button",
+                                        aria: { controls: "tabs-horizontal-first-panel" } do %>
+      First horizontal tab
+    <% end %>
+    <%= aria.tabs.tab_target.tag.button id: "tabs-horizontal-second-tab", type: "button",
+                                        aria: { controls: "tabs-horizontal-second-panel" } do %>
+      Second horizontal tab
+    <% end %>
+    <%= aria.tabs.tab_target.tag.button id: "tabs-horizontal-third-tab", type: "button",
+                                        aria: { controls: "tabs-horizontal-third-panel" } do %>
+      Third horizontal tab
+    <% end %>
+  <% end %>
+
+  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-horizontal-first-panel" do %>
+    First horizontal panel
+  <% end %>
+
+  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-horizontal-second-panel" do %>
+    Second horizontal panel
+  <% end %>
+
+  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-horizontal-third-panel" do %>
+    Third horizontal panel
+  <% end %>
+<% end %>
+
+<a href="#tabs-vertical" data-turbo="false">Skip to #tabs-vertical</a>
+
+<%= aria.tabs.tag id: "tabs-vertical" do %>
+  <%= aria.tabs.tablist_target.tag.div id: "tabs-vertical-tablist", aria: { orientation: "vertical" } do %>
+    <%= aria.tabs.tab_target.tag.button id: "tabs-vertical-first-tab", type: "button", style: "display: block;",
+                                        aria: { controls: "tabs-vertical-first-panel" } do %>
+      First vertical tab
+    <% end %>
+    <%= aria.tabs.tab_target.tag.button id: "tabs-vertical-second-tab", type: "button", style: "display: block;",
+                                        aria: { controls: "tabs-vertical-second-panel" } do %>
+      Second vertical tab
+    <% end %>
+    <%= aria.tabs.tab_target.tag.button id: "tabs-vertical-third-tab", type: "button", style: "display: block;",
+                                        aria: { controls: "tabs-vertical-third-panel" } do %>
+      Third vertical tab
+    <% end %>
+  <% end %>
+
+  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-vertical-first-panel" do %>
+    First vertical panel
+  <% end %>
+
+  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-vertical-second-panel" do %>
+    Second vertical panel
+  <% end %>
+
+  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-vertical-third-panel" do %>
+    Third vertical panel
+  <% end %>
+<% end %>
+
+<a href="#tabs-click-to-select" data-turbo="false">Skip to #tabs-click-to-select</a>
+
+<%= aria.tabs(defer_selection_value: true).tag id: "tabs-click-to-select" do %>
+  <%= aria.tabs.tablist_target.tag.div id: "tabs-click-to-select-tablist" do %>
+    <%= aria.tabs.tab_target.tag.button id: "tabs-click-to-select-first-tab", type: "button",
+                                        aria: { controls: "tabs-click-to-select-first-panel" } do %>
+      First click-to-select tab
+    <% end %>
+    <%= aria.tabs.tab_target.tag.button id: "tabs-click-to-select-second-tab", type: "button",
+                                        aria: { controls: "tabs-click-to-select-second-panel" } do %>
+      Second click-to-select tab
+    <% end %>
+    <%= aria.tabs.tab_target.tag.button id: "tabs-click-to-select-third-tab", type: "button",
+                                        aria: { controls: "tabs-click-to-select-third-panel" } do %>
+      Third click-to-select tab
+    <% end %>
+  <% end %>
+
+  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-click-to-select-first-panel" do %>
+    First click-to-select panel
+  <% end %>
+
+  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-click-to-select-second-panel" do %>
+    Second click-to-select panel
+  <% end %>
+
+  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-click-to-select-third-panel" do %>
+    Third click-to-select panel
+  <% end %>
+<% end %>
