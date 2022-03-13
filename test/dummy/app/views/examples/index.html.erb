@@ -3,11 +3,11 @@
   dialog[open]  { display: block; }
 </style>
 
-<%= tag.button aria: { controls: "dialog" }, **aria.disclosure do %>
+<%= aria.disclosure.tag(aria: { controls: "dialog" }) do %>
   Open Dialog
 <% end %>
 
-<%= tag.dialog id: "dialog", **aria.dialog do %>
+<%= aria.dialog.tag(id: "dialog") do %>
   <h1 id="dialog-title">Modal Dialog</h1>
 
   <form>
@@ -29,7 +29,7 @@
 
 <hr>
 
-<%= tag.button aria: { controls: "details" }, **aria.disclosure do %>
+<%= aria.disclosure.tag(aria: { controls: "details" }) do %>
   Open Details
 <% end %>
 
@@ -39,7 +39,7 @@
   Details
 </details>
 
-<%= tag.button aria: { controls: "css-class" }, **aria.disclosure(expanded_class: "expanded") do %>
+<%= aria.disclosure(expanded_class: "expanded").tag.button(aria: { controls: "css-class" }) do %>
   Toggle CSS class
 <% end %>
 
@@ -55,7 +55,7 @@
 
 <a href="#feed" data-turbo="false">Skip to #feed</a>
 
-<%= tag.div id: "feed", **aria.feed do %>
+<%= aria.feed.tag(id: "feed") do %>
   <article>First article</article>
   <article>Second article</article>
   <article>Third article</article>
@@ -63,7 +63,7 @@
 
 <hr>
 
-<%= tag.form aria.combobox.merge(data: { controller: "form", action: "input->form#requestSubmit", turbo_frame: "names" }) do %>
+<%= aria.combobox.tag.form(data: { controller: "form", action: "input->form#requestSubmit", turbo_frame: "names" }) do %>
   <button type="button" data-action="click->combobox#expand">Expand combobox</button>
 
   <label for="query">Names</label>

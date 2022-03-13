@@ -132,7 +132,7 @@ Targets:
   <turbo-frame <%= aria.combobox.listbox_target %> id="names">
     <% if params[:query].present? %>
       <% %w[ Alan Alex Alice Barbara Bill Bob ].filter { |name| name.starts_with? params[:query] }.each_with_index do |name, id| %>
-        <%= aria.combobox.option.tag.button name, type: "button", id: "name_#{id}", aria: { selected: id.zero? } %>
+        <%= aria.combobox.option_target.tag.button name, type: "button", id: "name_#{id}", aria: { selected: id.zero? } %>
       <% end %>
     <% end %>
   </turbo-frame>
@@ -161,6 +161,8 @@ application.register("disclosure", DisclosureController)
 
 #### Helpers
 
+Calls to `aria.disclosure.tag` render a `<button>` by default.
+
 `aria.disclosure(expanded_class:)` embeds attributes on the root element:
 
 * `data-controller="disclosure"`
@@ -172,9 +174,9 @@ When `expanded_class:` is provided, embeds:
 * `data-disclosure-expanded-class`
 
 ```html+erb
-<button <%= aria.disclosure %> aria-controls="details">
+<%= aria.disclosure.tag aria: { controls: "details" } do %>
   Open Details
-</button>
+<% end %>
 
 <details id="details">
   <summary>Summary</summary>
@@ -186,21 +188,21 @@ When `expanded_class:` is provided, embeds:
 Toggling the `[hidden]` attribute on an element
 
 ```html+erb
-<button <%= aria.disclosure %> aria-controls="hidden">
+<button <%= aria.disclosure %> aria-controls="toggled-with-hidden">
   Toggle Hidden
 </button>
 
-<div id="hidden">Visible</div>
+<div id="toggled-with-hidden">Visible</div>
 ```
 
 Toggling a CSS class on an element
 
 ```html+erb
-<button <%= aria.disclosure expanded_class: "expanded" %> aria-controls="css-class">
+<%= aria.disclosure(expanded_class: "expanded").tag(aria: { controls: "toggled-with-css-class" }) do %>
   Toggle CSS class
-</button>
+<% end %>
 
-<div id="css-class">CSS class</div>
+<div id="toggled-with-css-class">CSS class</div>
 ```
 
 #### Actions
@@ -229,6 +231,8 @@ application.register("dialog", DialogController)
 * `aria-model="true"`
 * `role="dialog"`
 
+Call to `aria.dialog.tag` default to rendering `<dialog>` elements
+
 ```html+erb
 <body>
   <main>
@@ -237,7 +241,7 @@ application.register("dialog", DialogController)
     </button>
   </main>
 
-  <dialog <%= aria.dialog %> id="dialog">
+  <%= aria.dialog.tag id: "dialog" do %>
     <h1 id="dialog-title">Modal Dialog</h1>
 
     <form action="/comments" method="post">
@@ -247,7 +251,7 @@ application.register("dialog", DialogController)
       <button>Submit</button>
       <button formmethod="dialog">Cancel</button>
     </form>
-  </dialog>
+  <% end %>
 </body>
 ```
 

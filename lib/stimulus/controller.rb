@@ -3,8 +3,13 @@ module Stimulus
     class_attribute :separator, default: "_"
     class_attribute :element_attributes, default: {}
     class_attribute :allowed_element_data_attributes, default: Set.new
+    class_attribute :default_tag_name, default: "div"
 
     delegate_missing_to :attributes
+
+    def self.tag_name(tag_name)
+      self.default_tag_name = tag_name
+    end
 
     def self.attributes(**attributes)
       self.element_attributes = element_attributes.merge attributes
@@ -43,6 +48,14 @@ module Stimulus
       @view_context.tag.attributes(data: { controller: identifier })
         .merge(element_attributes)
         .merge(data: @element_data_attributes)
+    end
+
+    def tag(**options, &block)
+      if options.any? || block.present?
+        attributes.with_attributes(**options).content_tag(default_tag_name, &block)
+      else
+        attributes.tag
+      end
     end
   end
 end
