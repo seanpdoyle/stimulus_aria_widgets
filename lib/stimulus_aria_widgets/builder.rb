@@ -19,5 +19,9 @@ module StimulusAriaWidgets
     ruby2_keywords def tabs(*arguments)
       TabsController.new(view_context, *arguments)
     end
+
+    ruby2_keywords def grid(*arguments)
+      GridController.new(view_context, *arguments)
+    end
   end
 end

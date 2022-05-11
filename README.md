@@ -372,8 +372,81 @@ When `defer_selection_value:` is provided, embeds:
 
 #### Actions
 
-* `navigate(KeyEvent)`
+* `navigate(KeyboardEvent)`
 * `select(Event)`
+
+### [Grid](https://www.w3.org/TR/wai-aria-practices-1.2/#grid)
+
+A [role="grid"][] widget is a container that enables users to navigate the
+information or interactive elements it contains using directional navigation
+keys, such as arrow keys, <kbd>Home</kbd>, and <kbd>End</kbd>.
+
+[role="grid"]: https://www.w3.org/TR/wai-aria-1.2/#grid
+
+```js
+import { Application, Controller } from "stimulus"
+import { GridController } from "stimulus_aria_widgets"
+
+const application = Application.start()
+application.register("grid", GridController)
+```
+
+#### Helpers
+
+`aria.grid` embeds attributes on the root element:
+
+* `data-controller="grid"`
+
+Calls to `aria.grid.tag` default to rendering `<table>` elements
+
+Targets:
+
+`aria.grid.row_target` embeds attributes:
+
+* `role="row"`
+* `data-grid-target="row"`
+* `data-action="keydown->grid#moveRow"`
+* `data-grid-directions-param="{"ArrowDown":1,"ArrowUp":-1,"PageDown":10,"PageUp":-10}"`
+
+`aria.grid.gridcell_target` embeds attributes:
+
+* `role="gridcell"`
+* `data-grid-target="gridcell"`
+* `data-action="focus->grid#captureFocus keydown->grid#moveColumn"`
+* `data-grid-boundaries-param="{"Home":0,"End":1}"`
+* `data-grid-directions-param="{"ArrowRight":1,"ArrowLeft":-1}"`
+
+```html+erb
+<%= aria.grid.tag id: "grid-table" do |builder| %>
+  <thead>
+    <tr>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= builder.row_target.tag.tr do %>
+      <%= builder.gridcell_target.tag.td "A1" %>
+      <%= builder.gridcell_target.tag.td "A2" %>
+      <%= builder.gridcell_target.tag.td "A3" %>
+    <% end %>
+
+    <%= builder.row_target.tag.tr do %>
+      <%= builder.gridcell_target.tag.td "B1" %>
+      <%= builder.gridcell_target.tag.td "B2" %>
+      <%= builder.gridcell_target.tag.td "B3" %>
+    <% end %>
+  </tbody>
+<% end %>
+```
+
+#### Actions
+
+* `captureFocus(FocusEvent)`
+* `moveRow(KeyboardEvent)`
+* `moveColumn(KeyboardEvent)`
 
 ## Configuration
 
