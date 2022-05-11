@@ -178,3 +178,41 @@
     Third click-to-select panel
   <% end %>
 <% end %>
+
+<hr>
+
+<a href="#grid-table">Jump to #grid-table</a>
+
+<%= aria.grid.tag id: "grid-table" do |builder| %>
+  <thead>
+    <tr>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= builder.row_target.tag.tr do %>
+      <%= builder.gridcell_target.tag.td "A1" %>
+      <%= builder.gridcell_target.tag.td "A2" %>
+      <%= builder.gridcell_target.tag.td "A3" %>
+    <% end %>
+
+    <%= builder.row_target.tag.tr do %>
+      <%= builder.gridcell_target.tag.td "B1" %>
+      <%= builder.gridcell_target.tag.td "B2" %>
+      <%= builder.gridcell_target.tag.td "B3" %>
+    <% end %>
+
+    <%= builder.row_target.tag.tr do %>
+      <%= builder.gridcell_target.tag.td "C1" %>
+      <%= builder.gridcell_target.tag.td "C2" %>
+      <%= builder.gridcell_target.tag.td "C3" %>
+    <% end %>
+  </tbody>
+
+  <caption>A #grid-table example</caption>
+<% end %>
+
+<a href="#grid-table">Jump back to #grid-table</a>

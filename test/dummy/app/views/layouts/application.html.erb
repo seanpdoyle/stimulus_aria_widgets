@@ -28,6 +28,7 @@
         DisclosureController,
         FeedController,
         TabsController,
+        GridController,
       } from "@seanpdoyle/stimulus_aria_widgets"
       import "@seanpdoyle/stimulus_aria_widgets/polyfills"
 
@@ -39,6 +40,7 @@
       application.register("disclosure", DisclosureController)
       application.register("feed", FeedController)
       application.register("tabs", TabsController)
+      application.register("grid", GridController)
       application.register("form", class extends Controller {
         requestSubmit() { this.element.requestSubmit() }
       })
