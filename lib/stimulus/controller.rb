@@ -15,13 +15,15 @@ module Stimulus
       self.element_attributes = element_attributes.merge attributes
     end
 
-    def self.target(name, callable = nil, **attributes, &block)
+    def self.target(name, **overrides, &block)
       define_method [ name, :target ].join(separator) do
-        attribute = [ identifier, :target ].join(separator)
+        Target.new(name, @view_context, self, &block).tap do |target|
+          target.attributes(**overrides)
 
-        overrides = [ callable, block, -> { attributes } ].compact.first.call
-
-        @view_context.tag.attributes(data: { attribute => @view_context.token_list(name) }).merge(overrides)
+          if block.present?
+            target.instance_exec(&block)
+          end
+        end
       end
     end
 
@@ -52,16 +54,26 @@ module Stimulus
         .merge(data: @element_data_attributes)
     end
 
-    def tag(**options, &block)
-      if options.any? || block.present?
-        attributes.with_attributes(**options).content_tag(default_tag_name) do
-          @view_context.capture { yield_self(&block) }
+    ruby2_keywords def tag(*arguments, &block)
+      options = arguments.extract_options!
+
+      if arguments.any? || options.any? || block.present?
+        if arguments.any?
+          attributes.with_attributes(**options).content_tag(default_tag_name, *arguments)
+        else
+          attributes.with_attributes(**options).content_tag(default_tag_name) do
+            @view_context.capture { yield_self(&block) }
+          end
         end
       else
         DelegatorWithClosure.new(attributes.tag) do |closure|
           @view_context.capture { yield_self(&closure) }
         end
       end
+    end
+
+    def to_s
+      attributes.to_s
     end
   end
 end
