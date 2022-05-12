@@ -15,5 +15,9 @@ module StimulusAriaWidgets
     ruby2_keywords def dialog(*arguments)
       DialogController.new(view_context, *arguments)
     end
+
+    ruby2_keywords def tabs(*arguments)
+      TabsController.new(view_context, *arguments)
+    end
   end
 end

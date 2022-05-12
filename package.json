@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "dialog-polyfill": "^0.5.6",
-    "stimulus": "^2.0.0",
+    "stimulus": "^3.0.0",
     "wicg-inert": "^3.1.1"
   },
   "scripts": {

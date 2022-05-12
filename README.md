@@ -111,14 +111,14 @@ Targets:
 
 `aria.combobox.combobox_target` embeds attributes:
 
+* `role="combobox"`
 * `data-combobox-target="combobox"`
 * `data-action="keydown->combobox#navigate"`
-* `role="combobox"`
 
 `aria.combobox.listbox_target` embeds attributes:
 
-* `data-combobox-target="listbox"`
 * `role="listbox"`
+* `data-combobox-target="listbox"`
 
 `aria.combobox.option_target` embeds attributes:
 
@@ -132,7 +132,7 @@ Targets:
   <turbo-frame <%= aria.combobox.listbox_target %> id="names">
     <% if params[:query].present? %>
       <% %w[ Alan Alex Alice Barbara Bill Bob ].filter { |name| name.starts_with? params[:query] }.each_with_index do |name, id| %>
-        <%= aria.combobox.option.tag.button name, type: "button", id: "name_#{id}", aria: { selected: id.zero? } %>
+        <%= aria.combobox.option_target.tag.button name, type: "button", id: "name_#{id}", aria: { selected: id.zero? } %>
       <% end %>
     <% end %>
   </turbo-frame>
@@ -161,6 +161,8 @@ application.register("disclosure", DisclosureController)
 
 #### Helpers
 
+Calls to `aria.disclosure.tag` render a `<button>` by default.
+
 `aria.disclosure(expanded_class:)` embeds attributes on the root element:
 
 * `data-controller="disclosure"`
@@ -172,9 +174,9 @@ When `expanded_class:` is provided, embeds:
 * `data-disclosure-expanded-class`
 
 ```html+erb
-<button <%= aria.disclosure %> aria-controls="details">
+<%= aria.disclosure.tag aria: { controls: "details" } do %>
   Open Details
-</button>
+<% end %>
 
 <details id="details">
   <summary>Summary</summary>
@@ -186,21 +188,21 @@ When `expanded_class:` is provided, embeds:
 Toggling the `[hidden]` attribute on an element
 
 ```html+erb
-<button <%= aria.disclosure %> aria-controls="hidden">
+<button <%= aria.disclosure %> aria-controls="toggled-with-hidden">
   Toggle Hidden
 </button>
 
-<div id="hidden">Visible</div>
+<div id="toggled-with-hidden">Visible</div>
 ```
 
 Toggling a CSS class on an element
 
 ```html+erb
-<button <%= aria.disclosure expanded_class: "expanded" %> aria-controls="css-class">
+<%= aria.disclosure(expanded_class: "expanded").tag(aria: { controls: "toggled-with-css-class" }) do %>
   Toggle CSS class
-</button>
+<% end %>
 
-<div id="css-class">CSS class</div>
+<div id="toggled-with-css-class">CSS class</div>
 ```
 
 #### Actions
@@ -225,9 +227,11 @@ application.register("dialog", DialogController)
 
 `aria.dialog` embeds attributes on the root element:
 
-* `data-controller="dialog"`
-* `aria-modal="true"`
 * `role="dialog"`
+* `data-controller="dialog"`
+* `aria-model="true"`
+
+Calls to `aria.dialog.tag` default to rendering `<dialog>` elements
 
 ```html+erb
 <body>
@@ -237,7 +241,7 @@ application.register("dialog", DialogController)
     </button>
   </main>
 
-  <dialog <%= aria.dialog %> id="dialog">
+  <%= aria.dialog.tag id: "dialog" do %>
     <h1 id="dialog-title">Modal Dialog</h1>
 
     <form action="/comments" method="post">
@@ -247,7 +251,7 @@ application.register("dialog", DialogController)
       <button>Submit</button>
       <button formmethod="dialog">Cancel</button>
     </form>
-  </dialog>
+  <% end %>
 </body>
 ```
 
@@ -271,23 +275,105 @@ application.register("feed", FeedController)
 
 `aria.feed` embeds attributes on the root element:
 
+* `role="feed"`
 * `data-controller="feed"`
 * `data-action="keydown->feed#navigate"`
-* `role="feed"`
+
+Targets:
+
+`aria.feed.article_target` embeds attributes:
+
+* `data-feed-target="article"`
 
 ```html+erb
 <a href="#feed">Skip to #feed</a>
 
 <div <%= aria.feed %> id="feed">
-  <article>First article</article>
-  <article>Second article</article>
-  <article>Third article</article>
+  <article <%= aria.feed.article_target %>>First article</article>
+  <article <%= aria.feed.article_target %>>Second article</article>
+  <article <%= aria.feed.article_target %>>Third article</article>
 </div>
 ```
 
 #### Actions
 
 * `navigate(KeyboardEvent)`
+
+### [Tabs](https://www.w3.org/TR/wai-aria-practices-1.2/#tabpanel)
+
+View content nested within [role="tabpanel"][] elements by navigating
+a collection of [role="tab"][] elements nested within a [role="tablist"][]
+element.
+
+[role="tabpanel"]: https://www.w3.org/TR/wai-aria-1.2/#tabpanel
+[role="tab"]: https://www.w3.org/TR/wai-aria-1.2/#tab
+[role="tablist"]: https://www.w3.org/TR/wai-aria-1.2/#tablist
+
+```js
+import { Application, Controller } from "stimulus"
+import { TabsController } from "stimulus_aria_widgets"
+
+const application = Application.start()
+application.register("tabs", TabsController)
+```
+
+#### Helpers
+
+`aria.tabs(defer_selection_value: Boolean)` embeds attributes on the root element:
+
+* `data-controller="tabs"`
+
+Targets:
+
+`aria.tabs.tablist_target` embeds attributes:
+
+* `role="tablist"`
+* `data-tabs-target="tablist"`
+* `data-action="keydown->tabs#navigate"`
+
+`aria.tabs.tab_target` embeds attributes:
+
+* `role="tab"`
+* `data-tabs-target="tab"`
+* `data-action="click->tabs#select"`
+
+`aria.tabs.tabpanel_target` embeds attributes:
+
+* `role="tabpanel"`
+* `data-tabs-target="tabpanel"`
+
+When `defer_selection_value:` is provided, embeds:
+
+* `data-tabs-defer-selection-value`
+
+```html+erb
+<div <%= aria.tabs %> id="tabs">
+  <div <%= aria.tabs.tablist_target %> id="tabs-tablist">
+    <button <%= aria.tabs.tab_target %> id="tabs-first-tab" type="button"
+            aria-controls="tabs-first-tabpanel">
+      First tab
+    </button>
+
+    <button <%= aria.tabs.tab_target %> id="tabs-second-tab" type="button"
+            aria-controls="tabs-second-tabpanel">
+      Second tab
+    </button>
+  </div>
+
+  <div <%= aria.tabs.tabpanel_target %> id="tabs-first-tabpanel">
+    First panel content
+  </div>
+
+  <div <%= aria.tabs.tabpanel_target %> id="tabs-second-tabpanel">
+    Second panel content
+  </div>
+</div>
+```
+
+#### Actions
+
+* `navigate(KeyEvent)`
+* `select(Event)`
 
 ## Configuration
 

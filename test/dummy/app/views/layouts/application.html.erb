@@ -22,7 +22,13 @@
       import "https://cdn.skypack.dev/@hotwired/turbo"
       import "https://cdn.skypack.dev/form-request-submit-polyfill"
 
-      import { ComboboxController, DialogController, DisclosureController, FeedController } from "@seanpdoyle/stimulus_aria_widgets"
+      import {
+        ComboboxController,
+        DialogController,
+        DisclosureController,
+        FeedController,
+        TabsController,
+      } from "@seanpdoyle/stimulus_aria_widgets"
       import "@seanpdoyle/stimulus_aria_widgets/polyfills"
 
       import { Application, Controller } from "stimulus"
@@ -32,6 +38,7 @@
       application.register("dialog", DialogController)
       application.register("disclosure", DisclosureController)
       application.register("feed", FeedController)
+      application.register("tabs", TabsController)
       application.register("form", class extends Controller {
         requestSubmit() { this.element.requestSubmit() }
       })

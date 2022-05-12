@@ -1,11 +1,10 @@
 import { Controller } from "stimulus";
 export default class extends Controller {
-    observer: MutationObserver;
-    initialize(): void;
+    static targets: string[];
+    articleTargets: HTMLElement[];
     connect(): void;
-    disconnect(): void;
+    articleTargetConnected(target: HTMLElement): void;
+    articleTargetDisconnected(): void;
     navigate(event: KeyboardEvent): void;
-    private refreshArticles;
-    private get articleElements();
 }
 //# sourceMappingURL=feed_controller.d.ts.map
