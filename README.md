@@ -231,7 +231,7 @@ application.register("dialog", DialogController)
 * `data-controller="dialog"`
 * `aria-model="true"`
 
-Call to `aria.dialog.tag` default to rendering `<dialog>` elements
+Calls to `aria.dialog.tag` default to rendering `<dialog>` elements
 
 ```html+erb
 <body>
