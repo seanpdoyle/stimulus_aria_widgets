@@ -54,9 +54,13 @@ module Stimulus
 
     def tag(**options, &block)
       if options.any? || block.present?
-        attributes.with_attributes(**options).content_tag(default_tag_name, &block)
+        attributes.with_attributes(**options).content_tag(default_tag_name) do
+          @view_context.capture { yield_self(&block) }
+        end
       else
-        attributes.tag
+        DelegatorWithClosure.new(attributes.tag) do |closure|
+          @view_context.capture { yield_self(&closure) }
+        end
       end
     end
   end
