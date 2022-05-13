@@ -125,18 +125,18 @@ Targets:
 * `role="option"`
 
 ```html+erb
-<form <%= aria.combobox %> data-turbo-frame="names">
+<%= aria.combobox.tag.form data: { turbo_frame: "names" } do |builder| %>
   <label for="query">Names</label>
-  <input id="query" <%= aria.combobox.combobox_target.merge aria: { expanded: params[:query].present? } %> type="search" name="query">
+  <input id="query" <%= builder.combobox_target.merge aria: { expanded: params[:query].present? } %> type="search" name="query">
 
-  <turbo-frame <%= aria.combobox.listbox_target %> id="names">
+  <turbo-frame <%= builder.listbox_target %> id="names">
     <% if params[:query].present? %>
       <% %w[ Alan Alex Alice Barbara Bill Bob ].filter { |name| name.starts_with? params[:query] }.each_with_index do |name, id| %>
-        <%= aria.combobox.option_target.tag.button name, type: "button", id: "name_#{id}", aria: { selected: id.zero? } %>
+        <%= builder.option_target.tag.button name, type: "button", id: "name_#{id}", aria: { selected: id.zero? } %>
       <% end %>
     <% end %>
   </turbo-frame>
-</form>
+<% end %>
 ```
 
 #### Actions
@@ -347,27 +347,27 @@ When `defer_selection_value:` is provided, embeds:
 * `data-tabs-defer-selection-value`
 
 ```html+erb
-<div <%= aria.tabs %> id="tabs">
-  <div <%= aria.tabs.tablist_target %> id="tabs-tablist">
-    <button <%= aria.tabs.tab_target %> id="tabs-first-tab" type="button"
+<%= aria.tabs.tag id: "tabs" do |builder| %>
+  <%= builder.tablist_target.tag id: "tabs-tablist" do %>
+    <button <%= builder.tab_target %> id="tabs-first-tab" type="button"
             aria-controls="tabs-first-tabpanel">
       First tab
     </button>
 
-    <button <%= aria.tabs.tab_target %> id="tabs-second-tab" type="button"
+    <button <%= builder.tab_target %> id="tabs-second-tab" type="button"
             aria-controls="tabs-second-tabpanel">
       Second tab
     </button>
-  </div>
+  <% end %>
 
-  <div <%= aria.tabs.tabpanel_target %> id="tabs-first-tabpanel">
+  <%= builder.tabpanel_target.tag id: "tabs-first-tabpanel" do %>
     First panel content
-  </div>
+  <% end %>
 
-  <div <%= aria.tabs.tabpanel_target %> id="tabs-second-tabpanel">
+  <%= builder.tabpanel_target.tag id: "tabs-second-tabpanel" do %>
     Second panel content
-  </div>
-</div>
+  <% end %>
+<% end %>
 ```
 
 #### Actions

@@ -55,30 +55,30 @@
 
 <a href="#feed" data-turbo="false">Skip to #feed</a>
 
-<%= aria.feed.tag id: "feed" do %>
-  <%= aria.feed.article_target.tag.article id: "article_1" do %>
+<%= aria.feed.tag id: "feed" do |builder| %>
+  <%= builder.article_target.tag.article id: "article_1" do %>
     First article
   <% end %>
-  <%= aria.feed.article_target.tag.article id: "article_2" do %>
+  <%= builder.article_target.tag.article id: "article_2" do %>
     Second article
   <% end %>
-  <%= aria.feed.article_target.tag.article id: "article_3" do %>
+  <%= builder.article_target.tag.article id: "article_3" do %>
     Third article
   <% end %>
 <% end %>
 
 <hr>
 
-<%= aria.combobox.tag.form(data: { controller: "form", action: "input->form#requestSubmit", turbo_frame: "names" }) do %>
+<%= aria.combobox.tag.form(data: { controller: "form", action: "input->form#requestSubmit", turbo_frame: "names" }) do |builder| %>
   <button type="button" data-action="click->combobox#expand">Expand combobox</button>
 
   <label for="query">Names</label>
-  <input id="query" <%= aria.combobox.combobox_target %> type="search" name="query" aria-expanded="<%= params[:query].present? %>">
+  <input id="query" <%= builder.combobox_target %> type="search" name="query" aria-expanded="<%= params[:query].present? %>">
 
-  <turbo-frame <%= aria.combobox.listbox_target %> id="names">
+  <turbo-frame <%= builder.listbox_target %> id="names">
     <% if params[:query].present? %>
       <% %w[ Alan Alex Alice Barbara Bill Bob ].filter { |name| name.starts_with? params[:query] }.each_with_index do |name, id| %>
-        <button id="name_<%= id %>" type="button" <%= aria.combobox.option_target %> aria-selected="<%= id.zero? %>"><%= name %></button>
+        <button id="name_<%= id %>" type="button" <%= builder.option_target %> aria-selected="<%= id.zero? %>"><%= name %></button>
       <% end %>
     <% end %>
   </turbo-frame>
@@ -88,93 +88,93 @@
 
 <a href="#tabs-horizontal" data-turbo="false">Skip to #tabs-horizontal</a>
 
-<%= aria.tabs.tag id: "tabs-horizontal" do %>
-  <%= aria.tabs.tablist_target.tag.div id: "tabs-horizontal-tablist" do %>
-    <%= aria.tabs.tab_target.tag.button id: "tabs-horizontal-first-tab", type: "button",
-                                        aria: { controls: "tabs-horizontal-first-panel" } do %>
+<%= aria.tabs.tag id: "tabs-horizontal" do |builder| %>
+  <%= builder.tablist_target.tag.div id: "tabs-horizontal-tablist" do %>
+    <%= builder.tab_target.tag.button id: "tabs-horizontal-first-tab", type: "button",
+                                      aria: { controls: "tabs-horizontal-first-panel" } do %>
       First horizontal tab
     <% end %>
-    <%= aria.tabs.tab_target.tag.button id: "tabs-horizontal-second-tab", type: "button",
-                                        aria: { controls: "tabs-horizontal-second-panel" } do %>
+    <%= builder.tab_target.tag.button id: "tabs-horizontal-second-tab", type: "button",
+                                      aria: { controls: "tabs-horizontal-second-panel" } do %>
       Second horizontal tab
     <% end %>
-    <%= aria.tabs.tab_target.tag.button id: "tabs-horizontal-third-tab", type: "button",
-                                        aria: { controls: "tabs-horizontal-third-panel" } do %>
+    <%= builder.tab_target.tag.button id: "tabs-horizontal-third-tab", type: "button",
+                                      aria: { controls: "tabs-horizontal-third-panel" } do %>
       Third horizontal tab
     <% end %>
   <% end %>
 
-  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-horizontal-first-panel" do %>
+  <%= builder.tabpanel_target.tag.div id: "tabs-horizontal-first-panel" do %>
     First horizontal panel
   <% end %>
 
-  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-horizontal-second-panel" do %>
+  <%= builder.tabpanel_target.tag.div id: "tabs-horizontal-second-panel" do %>
     Second horizontal panel
   <% end %>
 
-  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-horizontal-third-panel" do %>
+  <%= builder.tabpanel_target.tag.div id: "tabs-horizontal-third-panel" do %>
     Third horizontal panel
   <% end %>
 <% end %>
 
 <a href="#tabs-vertical" data-turbo="false">Skip to #tabs-vertical</a>
 
-<%= aria.tabs.tag id: "tabs-vertical" do %>
-  <%= aria.tabs.tablist_target.tag.div id: "tabs-vertical-tablist", aria: { orientation: "vertical" } do %>
-    <%= aria.tabs.tab_target.tag.button id: "tabs-vertical-first-tab", type: "button", style: "display: block;",
-                                        aria: { controls: "tabs-vertical-first-panel" } do %>
+<%= aria.tabs.tag id: "tabs-vertical" do |builder| %>
+  <%= builder.tablist_target.tag.div id: "tabs-vertical-tablist", aria: { orientation: "vertical" } do %>
+    <%= builder.tab_target.tag.button id: "tabs-vertical-first-tab", type: "button", style: "display: block;",
+                                      aria: { controls: "tabs-vertical-first-panel" } do %>
       First vertical tab
     <% end %>
-    <%= aria.tabs.tab_target.tag.button id: "tabs-vertical-second-tab", type: "button", style: "display: block;",
-                                        aria: { controls: "tabs-vertical-second-panel" } do %>
+    <%= builder.tab_target.tag.button id: "tabs-vertical-second-tab", type: "button", style: "display: block;",
+                                      aria: { controls: "tabs-vertical-second-panel" } do %>
       Second vertical tab
     <% end %>
-    <%= aria.tabs.tab_target.tag.button id: "tabs-vertical-third-tab", type: "button", style: "display: block;",
-                                        aria: { controls: "tabs-vertical-third-panel" } do %>
+    <%= builder.tab_target.tag.button id: "tabs-vertical-third-tab", type: "button", style: "display: block;",
+                                      aria: { controls: "tabs-vertical-third-panel" } do %>
       Third vertical tab
     <% end %>
   <% end %>
 
-  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-vertical-first-panel" do %>
+  <%= builder.tabpanel_target.tag.div id: "tabs-vertical-first-panel" do %>
     First vertical panel
   <% end %>
 
-  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-vertical-second-panel" do %>
+  <%= builder.tabpanel_target.tag.div id: "tabs-vertical-second-panel" do %>
     Second vertical panel
   <% end %>
 
-  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-vertical-third-panel" do %>
+  <%= builder.tabpanel_target.tag.div id: "tabs-vertical-third-panel" do %>
     Third vertical panel
   <% end %>
 <% end %>
 
 <a href="#tabs-click-to-select" data-turbo="false">Skip to #tabs-click-to-select</a>
 
-<%= aria.tabs(defer_selection_value: true).tag id: "tabs-click-to-select" do %>
-  <%= aria.tabs.tablist_target.tag.div id: "tabs-click-to-select-tablist" do %>
-    <%= aria.tabs.tab_target.tag.button id: "tabs-click-to-select-first-tab", type: "button",
-                                        aria: { controls: "tabs-click-to-select-first-panel" } do %>
+<%= aria.tabs(defer_selection_value: true).tag id: "tabs-click-to-select" do |builder| %>
+  <%= builder.tablist_target.tag.div id: "tabs-click-to-select-tablist" do %>
+    <%= builder.tab_target.tag.button id: "tabs-click-to-select-first-tab", type: "button",
+                                      aria: { controls: "tabs-click-to-select-first-panel" } do %>
       First click-to-select tab
     <% end %>
-    <%= aria.tabs.tab_target.tag.button id: "tabs-click-to-select-second-tab", type: "button",
-                                        aria: { controls: "tabs-click-to-select-second-panel" } do %>
+    <%= builder.tab_target.tag.button id: "tabs-click-to-select-second-tab", type: "button",
+                                      aria: { controls: "tabs-click-to-select-second-panel" } do %>
       Second click-to-select tab
     <% end %>
-    <%= aria.tabs.tab_target.tag.button id: "tabs-click-to-select-third-tab", type: "button",
-                                        aria: { controls: "tabs-click-to-select-third-panel" } do %>
+    <%= builder.tab_target.tag.button id: "tabs-click-to-select-third-tab", type: "button",
+                                      aria: { controls: "tabs-click-to-select-third-panel" } do %>
       Third click-to-select tab
     <% end %>
   <% end %>
 
-  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-click-to-select-first-panel" do %>
+  <%= builder.tabpanel_target.tag.div id: "tabs-click-to-select-first-panel" do %>
     First click-to-select panel
   <% end %>
 
-  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-click-to-select-second-panel" do %>
+  <%= builder.tabpanel_target.tag.div id: "tabs-click-to-select-second-panel" do %>
     Second click-to-select panel
   <% end %>
 
-  <%= aria.tabs.tabpanel_target.tag.div id: "tabs-click-to-select-third-panel" do %>
+  <%= builder.tabpanel_target.tag.div id: "tabs-click-to-select-third-panel" do %>
     Third click-to-select panel
   <% end %>
 <% end %>
