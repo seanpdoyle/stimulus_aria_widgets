@@ -2,15 +2,19 @@
   "name": "@seanpdoyle/stimulus_aria_widgets",
   "private": true,
   "type": "module",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "main": "app/assets/javascripts/stimulus_aria_widgets.js",
+  "module": "app/assets/javascripts/stimulus_aria_widgets.js",
+  "types": "app/assets/javascripts/stimulus_aria_widgets/index.d.ts",
   "files": [
-    "dist/**/*"
+    "app/assets/javascripts/**/*"
   ],
   "version": "0.1.0",
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.2",
+    "rollup": "^2.75.1",
     "ts-loader": "^9.1.1",
+    "tslib": "^2.4.0",
     "typescript": "^4.2.4"
   },
   "dependencies": {
@@ -19,8 +23,8 @@
     "wicg-inert": "^3.1.1"
   },
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": "tsc && tsc --project tsconfig.cjs.json",
+    "clean": "rm -rf app/assets/javascripts/*",
+    "build": "tsc --emitDeclarationOnly && rollup -c",
     "prepublish": "yarn build"
   }
 }

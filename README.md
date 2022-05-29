@@ -35,6 +35,21 @@ And then execute:
 $ bundle
 ```
 
+### Installation through [importmap-rails][]
+
+Once the gem is installed, add the client-side dependency mapping to your
+project's `config/importmap.rb` declaration:
+
+```ruby
+# config/importmap.rb
+
+pin "@seanpdoyle/stimulus_aria_widgets", to: "stimulus_aria_widgets.js"
+```
+
+[importmap-rails]: https://github.com/rails/importmap-rails
+
+### Installation through `npm` or `yarn`
+
 Once the gem is installed, add the client-side dependency to your project via
 npm or Yarn:
 
@@ -48,17 +63,39 @@ The `DialogController` relies on functioning `<dialog>` elements and the
 `[inert]` attribute. If your application needs to polyfill that element, install
 the transitive dependencies:
 
-```bash
-yarn add wicg-inert dialog-polyfill
-```
+* [wicg-inert](https://github.com/WICG/inert)
+* [dialog-polyfill](https://github.com/GoogleChrome/dialog-polyfill)
 
-Then import the polyfill:
+Once they're available, import and install the polyfills:
 
 ```javascript
 import "wicg-inert"
 import { installPolyfills } from "@seanpdoyle/stimulus_aria_widgets"
 
 installPolyfills(document)
+```
+
+#### Installing Polyfills through [importmap-rails][]
+
+Add the client-side dependency mappings to your project's `config/importmap.rb`
+declaration:
+
+```ruby
+# config/importmap.rb
+
+pin "wicg-inert", to: "https://cdn.skypack.dev/wicg-inert"
+pin "dialog-polyfill", to: "https://cdn.skypack.dev/dialog-polyfill"
+pin "@seanpdoyle/stimulus_aria_widgets", to: "stimulus_aria_widgets.js"
+```
+
+[importmap-rails]: https://github.com/rails/importmap-rails
+
+#### Installing Polyfills through `npm` or `yarn`
+
+Add the client-side dependencies to your project via npm or Yarn:
+
+```bash
+yarn add wicg-inert dialog-polyfill
 ```
 
 ## Usage
@@ -94,7 +131,7 @@ template][].
 
 ```js
 import { Application, Controller } from "stimulus"
-import { ComboboxController } from "stimulus_aria_widgets"
+import { ComboboxController } from "@seanpdoyle/stimulus_aria_widgets"
 
 const application = Application.start()
 application.register("combobox", ComboboxController)
@@ -153,7 +190,7 @@ Toggling a `<details>` element
 
 ```js
 import { Application, Controller } from "stimulus"
-import { DisclosureController } from "stimulus_aria_widgets"
+import { DisclosureController } from "@seanpdoyle/stimulus_aria_widgets"
 
 const application = Application.start()
 application.register("disclosure", DisclosureController)
@@ -215,8 +252,9 @@ Combined with a [Disclosure](#Disclosure), toggle a `<dialog>` element
 
 ```js
 import { Application, Controller } from "stimulus"
-import { DialogController, DisclosureController } from "stimulus_aria_widgets"
-import "stimulus_aria_widgets/polyfills"
+import { installPolyfills, DialogController, DisclosureController } from "@seanpdoyle/stimulus_aria_widgets"
+
+installPolyfills(document)
 
 const application = Application.start()
 application.register("disclosure", DisclosureController)
@@ -265,7 +303,7 @@ Calls to `aria.dialog.tag` default to rendering `<dialog>` elements
 
 ```js
 import { Application, Controller } from "stimulus"
-import { FeedController } from "stimulus_aria_widgets"
+import { FeedController } from "@seanpdoyle/stimulus_aria_widgets"
 
 const application = Application.start()
 application.register("feed", FeedController)
@@ -311,7 +349,7 @@ element.
 
 ```js
 import { Application, Controller } from "stimulus"
-import { TabsController } from "stimulus_aria_widgets"
+import { TabsController } from "@seanpdoyle/stimulus_aria_widgets"
 
 const application = Application.start()
 application.register("tabs", TabsController)
@@ -385,7 +423,7 @@ keys, such as arrow keys, <kbd>Home</kbd>, and <kbd>End</kbd>.
 
 ```js
 import { Application, Controller } from "stimulus"
-import { GridController } from "stimulus_aria_widgets"
+import { GridController } from "@seanpdoyle/stimulus_aria_widgets"
 
 const application = Application.start()
 application.register("grid", GridController)

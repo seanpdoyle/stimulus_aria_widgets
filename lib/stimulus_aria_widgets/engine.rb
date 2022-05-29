@@ -10,5 +10,14 @@ module StimulusAriaWidgets
         end
       end
     end
+
+    initializer "stimulus_aria_widgets.assets" do |app|
+      if app.config.respond_to?(:assets)
+        app.config.assets.precompile += %w(
+          stimulus_aria_widgets.js
+          stimulus_aria_widgets/polyfills.js
+        )
+      end
+    end
   end
 end
