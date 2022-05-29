@@ -12,8 +12,7 @@
         "imports": {
           "dialog-polyfill": "https://cdn.skypack.dev/dialog-polyfill",
           "stimulus": "https://cdn.skypack.dev/stimulus",
-          "@seanpdoyle/stimulus_aria_widgets": "<%= asset_url "dist/esm/index.js" %>",
-          "@seanpdoyle/stimulus_aria_widgets/polyfills": "<%= asset_url "dist/esm/polyfills/index.js" %>",
+          "@seanpdoyle/stimulus_aria_widgets": "<%= asset_url "stimulus_aria_widgets.js" %>",
           "wicg-inert": "https://cdn.skypack.dev/wicg-inert"
         }
       }
@@ -23,6 +22,7 @@
       import "https://cdn.skypack.dev/form-request-submit-polyfill"
 
       import {
+        installPolyfills,
         ComboboxController,
         DialogController,
         DisclosureController,
@@ -30,9 +30,9 @@
         TabsController,
         GridController,
       } from "@seanpdoyle/stimulus_aria_widgets"
-      import "@seanpdoyle/stimulus_aria_widgets/polyfills"
-
       import { Application, Controller } from "stimulus"
+
+      installPolyfills(document)
 
       const application = Application.start()
       application.register("combobox", ComboboxController)

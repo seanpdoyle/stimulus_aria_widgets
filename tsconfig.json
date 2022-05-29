@@ -8,9 +8,8 @@
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noUnusedLocals": true,
-    "outDir": "dist/esm",
+    "outDir": "app/assets/javascripts/stimulus_aria_widgets",
     "rootDir": "src",
-    "inlineSourceMap": true,
     "strict": true,
     "target": "es2017"
   },
