@@ -163,10 +163,4 @@ class GridControllerTest < ApplicationSystemTestCase
   def assert_gridcell(*arguments, **options, &block)
     assert_selector(:gridcell, *arguments, **options, &block)
   end
-
-  def tab_until_focused(*arguments, **options, &block)
-    using_wait_time false do
-      send_keys(:tab) until page.has_selector?(*arguments, **options, focused: true, &block)
-    end
-  end
 end

@@ -1,6 +1,8 @@
 <style>
   dialog        { display: none; }
   dialog[open]  { display: block; }
+
+  [aria-selected="true"] { border: dotted black 1px; }
 </style>
 
 <%= aria.disclosure.tag(aria: { controls: "dialog" }) do %>

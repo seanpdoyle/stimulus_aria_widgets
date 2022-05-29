@@ -55,6 +55,14 @@ class ComboboxControllerTest < ApplicationSystemTestCase
     send_keys(:end).then              { assert_list_box_option "Alice", selected: true }
   end
 
+  test "omits options from tab order" do
+    visit examples_path
+    tab_until_focused :field, "Names"
+
+    send_keys("Al").then { assert_list_box_option "Alan", selected: true }
+    send_keys(:tab).then { assert_link focused: true }
+  end
+
   private
 
   def assert_combo_box(locator = nil, **options)
