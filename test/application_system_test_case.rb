@@ -9,6 +9,12 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   private
 
+  def tab_until_focused(*arguments, **options, &block)
+    using_wait_time false do
+      send_keys(:tab) until page.has_selector?(*arguments, **options, focused: true, &block)
+    end
+  end
+
   def append(erb, into:, locals: {})
     html = ApplicationController.renderer.render(inline: erb, locals: locals)
 
