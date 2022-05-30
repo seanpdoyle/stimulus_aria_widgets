@@ -139,27 +139,29 @@ application.register("combobox", ComboboxController)
 
 #### Helpers
 
-`aria.combobox` embeds attributes on the root element:
+`aria.combobox` renders attributes on the root element:
 
 * `data-controller="combobox"`
 * `data-action="input->combobox#expand"`
 
 Targets:
 
-`aria.combobox.combobox_target` embeds attributes:
+`aria.combobox.combobox_target` default attributes:
 
 * `role="combobox"`
+* `autocomplete="off"`
 * `data-combobox-target="combobox"`
 * `data-action="keydown->combobox#navigate"`
 
-`aria.combobox.listbox_target` embeds attributes:
+`aria.combobox.listbox_target` default attributes:
 
 * `role="listbox"`
 * `data-combobox-target="listbox"`
 
-`aria.combobox.option_target` embeds attributes:
+`aria.combobox.option_target` default attributes:
 
 * `role="option"`
+* `tabindex="-1"`
 
 ```html+erb
 <%= aria.combobox.tag.form data: { turbo_frame: "names" } do |builder| %>
@@ -200,13 +202,13 @@ application.register("disclosure", DisclosureController)
 
 Calls to `aria.disclosure.tag` render a `<button>` by default.
 
-`aria.disclosure(expanded_class:)` embeds attributes on the root element:
+`aria.disclosure(expanded_class:)` default attributes on the root element:
 
 * `data-controller="disclosure"`
 * `data-action="click->disclosure#toggle"`
 * `type="button"`
 
-When `expanded_class:` is provided, embeds:
+When `expanded_class:` is provided, renders:
 
 * `data-disclosure-expanded-class`
 
@@ -263,7 +265,7 @@ application.register("dialog", DialogController)
 
 #### Helpers
 
-`aria.dialog` embeds attributes on the root element:
+`aria.dialog` renders attributes on the root element:
 
 * `role="dialog"`
 * `data-controller="dialog"`
@@ -311,7 +313,7 @@ application.register("feed", FeedController)
 
 #### Helpers
 
-`aria.feed` embeds attributes on the root element:
+`aria.feed` renders attributes on the root element:
 
 * `role="feed"`
 * `data-controller="feed"`
@@ -319,7 +321,7 @@ application.register("feed", FeedController)
 
 Targets:
 
-`aria.feed.article_target` embeds attributes:
+`aria.feed.article_target` default attributes:
 
 * `data-feed-target="article"`
 
@@ -357,30 +359,30 @@ application.register("tabs", TabsController)
 
 #### Helpers
 
-`aria.tabs(defer_selection_value: Boolean)` embeds attributes on the root element:
+`aria.tabs(defer_selection_value: Boolean)` renders attributes on the root element:
 
 * `data-controller="tabs"`
 
 Targets:
 
-`aria.tabs.tablist_target` embeds attributes:
+`aria.tabs.tablist_target` default attributes:
 
 * `role="tablist"`
 * `data-tabs-target="tablist"`
 * `data-action="keydown->tabs#navigate"`
 
-`aria.tabs.tab_target` embeds attributes:
+`aria.tabs.tab_target` default attributes:
 
 * `role="tab"`
 * `data-tabs-target="tab"`
 * `data-action="click->tabs#select"`
 
-`aria.tabs.tabpanel_target` embeds attributes:
+`aria.tabs.tabpanel_target` default attributes:
 
 * `role="tabpanel"`
 * `data-tabs-target="tabpanel"`
 
-When `defer_selection_value:` is provided, embeds:
+When `defer_selection_value:` is provided, renders:
 
 * `data-tabs-defer-selection-value`
 
@@ -431,7 +433,7 @@ application.register("grid", GridController)
 
 #### Helpers
 
-`aria.grid` embeds attributes on the root element:
+`aria.grid` renders attributes on the root element:
 
 * `data-controller="grid"`
 
@@ -439,14 +441,14 @@ Calls to `aria.grid.tag` default to rendering `<table>` elements
 
 Targets:
 
-`aria.grid.row_target` embeds attributes:
+`aria.grid.row_target` default attributes:
 
 * `role="row"`
 * `data-grid-target="row"`
 * `data-action="keydown->grid#moveRow"`
 * `data-grid-directions-param="{"ArrowDown":1,"ArrowUp":-1,"PageDown":10,"PageUp":-10}"`
 
-`aria.grid.gridcell_target` embeds attributes:
+`aria.grid.gridcell_target` default attributes:
 
 * `role="gridcell"`
 * `data-grid-target="gridcell"`
@@ -465,16 +467,16 @@ Targets:
   </thead>
 
   <tbody>
-    <%= builder.row_target.tag.tr do %>
-      <%= builder.gridcell_target.tag.td "A1" %>
-      <%= builder.gridcell_target.tag.td "A2" %>
-      <%= builder.gridcell_target.tag.td "A3" %>
+    <%= builder.row_target.tag do %>
+      <%= builder.gridcell_target.tag "A1" %>
+      <%= builder.gridcell_target.tag "A2" %>
+      <%= builder.gridcell_target.tag "A3" %>
     <% end %>
 
-    <%= builder.row_target.tag.tr do %>
-      <%= builder.gridcell_target.tag.td "B1" %>
-      <%= builder.gridcell_target.tag.td "B2" %>
-      <%= builder.gridcell_target.tag.td "B3" %>
+    <%= builder.row_target.tag do %>
+      <%= builder.gridcell_target.tag "B1" %>
+      <%= builder.gridcell_target.tag "B2" %>
+      <%= builder.gridcell_target.tag "B3" %>
     <% end %>
   </tbody>
 <% end %>

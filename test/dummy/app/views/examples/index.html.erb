@@ -5,9 +5,9 @@
   [aria-selected="true"] { border: dotted black 1px; }
 </style>
 
-<%= aria.disclosure.tag(aria: { controls: "dialog" }) do %>
+<button <%= aria.disclosure %> aria-controls="dialog">
   Open Dialog
-<% end %>
+</button>
 
 <%= aria.dialog.tag(id: "dialog") do %>
   <h1 id="dialog-title">Modal Dialog</h1>
@@ -58,13 +58,13 @@
 <a href="#feed" data-turbo="false">Skip to #feed</a>
 
 <%= aria.feed.tag id: "feed" do |builder| %>
-  <%= builder.article_target.tag.article id: "article_1" do %>
+  <%= builder.article_target.tag id: "article_1" do %>
     First article
   <% end %>
-  <%= builder.article_target.tag.article id: "article_2" do %>
+  <%= builder.article_target.tag id: "article_2" do %>
     Second article
   <% end %>
-  <%= builder.article_target.tag.article id: "article_3" do %>
+  <%= builder.article_target.tag id: "article_3" do %>
     Third article
   <% end %>
 <% end %>
@@ -75,7 +75,7 @@
   <button type="button" data-action="click->combobox#expand">Expand combobox</button>
 
   <label for="query">Names</label>
-  <input id="query" <%= builder.combobox_target %> type="search" name="query" aria-expanded="<%= params[:query].present? %>">
+  <%= builder.combobox_target.tag id: "query", type: "search", name: "query", aria: { expanded: params[:query].present? } %>
 
   <turbo-frame <%= builder.listbox_target %> id="names">
     <% if params[:query].present? %>
@@ -195,22 +195,22 @@
   </thead>
 
   <tbody>
-    <%= builder.row_target.tag.tr do %>
-      <%= builder.gridcell_target.tag.td "A1" %>
-      <%= builder.gridcell_target.tag.td "A2" %>
-      <%= builder.gridcell_target.tag.td "A3" %>
+    <%= builder.row_target.tag do %>
+      <%= builder.gridcell_target.tag "A1" %>
+      <%= builder.gridcell_target.tag "A2" %>
+      <%= builder.gridcell_target.tag "A3" %>
     <% end %>
 
-    <%= builder.row_target.tag.tr do %>
-      <%= builder.gridcell_target.tag.td "B1" %>
-      <%= builder.gridcell_target.tag.td "B2" %>
-      <%= builder.gridcell_target.tag.td "B3" %>
+    <%= builder.row_target.tag do %>
+      <%= builder.gridcell_target.tag "B1" %>
+      <%= builder.gridcell_target.tag "B2" %>
+      <%= builder.gridcell_target.tag "B3" %>
     <% end %>
 
-    <%= builder.row_target.tag.tr do %>
-      <%= builder.gridcell_target.tag.td "C1" %>
-      <%= builder.gridcell_target.tag.td "C2" %>
-      <%= builder.gridcell_target.tag.td "C3" %>
+    <%= builder.row_target.tag do %>
+      <%= builder.gridcell_target.tag "C1" %>
+      <%= builder.gridcell_target.tag "C2" %>
+      <%= builder.gridcell_target.tag "C3" %>
     <% end %>
   </tbody>
 
