@@ -23,10 +23,10 @@ Add the `stimulus_aria_widgets` dependency to your application's Gemfile:
 gem 'stimulus_aria_widgets', github: 'seanpdoyle/stimulus_aria_widgets', branch: 'main'
 ```
 
-Additionally, depend on `action_view-attributes_and_token_lists`:
+Additionally, depend on `attributes_and_token_lists`:
 
 ```ruby
-gem 'action_view-attributes_and_token_lists', github: 'seanpdoyle/action_view-attributes_and_token_lists', branch: 'main'
+gem 'attributes_and_token_lists', github: 'seanpdoyle/attributes_and_token_lists', branch: 'main'
 ```
 
 And then execute:
@@ -114,7 +114,7 @@ and generated without [class][] attributes.
 Each instance constructed by the `aria` helper is an instance of `Attributes`
 containing `TokenList` instances.
 
-Provided by the [seanpdoyle/action_view-attributes_and_token_lists][] gem,
+Provided by the [seanpdoyle/attributes_and_token_lists][] gem,
 `Attributes` and `TokenList` are `Hash`- and `Set`-like instances that can
 combine merge attribute and token values, render themselves to HTML-safe
 strings, or chain calls to `#tag` to construct HTML elements.
@@ -123,7 +123,7 @@ For more usage examples, read the project's [System Tests][] and [example
 template][].
 
 [aria-widgets]: https://www.w3.org/TR/wai-aria-practices/#aria_ex
-[seanpdoyle/action_view-attributes_and_token_lists]: https://github.com/seanpdoyle/action_view-attributes_and_token_lists
+[seanpdoyle/attributes_and_token_lists]: https://github.com/seanpdoyle/attributes_and_token_lists
 [System Tests]: ./test/system
 [example template]: ./test/dummy/app/views/examples/index.html.erb
 

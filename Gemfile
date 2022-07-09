@@ -18,7 +18,7 @@ gem "sprockets-rails"
 gem "puma"
 gem "rexml"
 gem "sqlite3"
-gem "action_view-attributes_and_token_lists", github: "seanpdoyle/action_view-attributes_and_token_lists", branch: "main"
+gem "attributes_and_token_lists", github: "seanpdoyle/attributes_and_token_lists", branch: "main"
 
 group :test do
   gem "capybara"
