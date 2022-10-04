@@ -18,7 +18,7 @@ export default class extends Controller {
     this.attachTabs()
   }
 
-  tabpanelTargetConnected(target: HTMLElement) {
+  tabpanelTargetConnected() {
     this.attachTabs()
   }
 
