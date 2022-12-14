@@ -1,6 +1,16 @@
 import dialogPolyfill from 'dialog-polyfill';
 import { Controller } from 'stimulus';
 
+function booleanAttribute(element, attributeName) {
+    const value = element.getAttribute(attributeName);
+    return value == "" || /true/i.test(value || "");
+}
+function setExpanded(element, value) {
+    element.setAttribute("aria-expanded", value.toString());
+}
+function isExpanded(element) {
+    return booleanAttribute(element, "aria-expanded");
+}
 function isHTMLDialogElement(node) {
     return node instanceof Element && node.localName == "dialog";
 }
@@ -32,22 +42,57 @@ function polyfillDialog (document) {
     }).observe(document.documentElement, { subtree: true, childList: true });
 }
 
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+function __classPrivateFieldGet(receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+}
+
+var _selectOption, _comboboxToggled;
 class default_1$4 extends Controller {
     constructor() {
         super(...arguments);
-        this.comboboxToggled = () => {
-            if (this.isExpanded) {
+        _selectOption.set(this, (index) => {
+            if (index < 0) {
+                index = this.optionTargets.length - 1;
+            }
+            else if (index > this.optionTargets.length - 1) {
+                index = 0;
+            }
+            this.optionTargets.forEach(target => target.setAttribute("aria-selected", "false"));
+            if (this.optionTargets[index]) {
+                this.optionTargets[index].setAttribute("aria-selected", "true");
+                this.comboboxTarget.setAttribute("aria-activedescendant", this.optionTargets[index].id);
+            }
+        });
+        _comboboxToggled.set(this, () => {
+            if (isExpanded(this.comboboxTarget)) {
                 this.listboxTarget.hidden = false;
             }
             else {
                 this.listboxTarget.hidden = true;
             }
-        };
+        });
     }
     initialize() {
         this.comboboxTarget.setAttribute("aria-controls", this.listboxTarget.id);
         this.comboboxTarget.setAttribute("aria-owns", this.listboxTarget.id);
-        this.expandedObserver = new MutationObserver(this.comboboxToggled);
+        this.expandedObserver = new MutationObserver(__classPrivateFieldGet(this, _comboboxToggled));
     }
     connect() {
         this.expandedObserver.observe(this.comboboxTarget, { attributeFilter: ["aria-expanded"] });
@@ -57,19 +102,19 @@ class default_1$4 extends Controller {
     }
     expand({ target }) {
         if (target instanceof HTMLInputElement) {
-            this.isExpanded = target.value.length > 0;
+            setExpanded(this.comboboxTarget, target.value.length > 0);
         }
         else {
-            this.isExpanded = true;
+            setExpanded(this.comboboxTarget, true);
         }
     }
     collapse() {
-        this.isExpanded = false;
+        setExpanded(this.comboboxTarget, false);
     }
     navigate(event) {
-        var _a;
-        if (this.isExpanded) {
-            let selectedOptionIndex = this.selectedOptionElement ? this.optionTargets.indexOf(this.selectedOptionElement) : 0;
+        if (isExpanded(this.comboboxTarget)) {
+            const selectedOptionElement = selectedOptionFrom(this.optionTargets);
+            let selectedOptionIndex = selectedOptionElement ? this.optionTargets.indexOf(selectedOptionElement) : 0;
             switch (event.key) {
                 case "ArrowUp":
                     event.preventDefault();
@@ -89,61 +134,54 @@ class default_1$4 extends Controller {
                     break;
                 case "Enter":
                     event.preventDefault();
-                    (_a = this.selectedOptionElement) === null || _a === void 0 ? void 0 : _a.click();
+                    selectedOptionElement === null || selectedOptionElement === void 0 ? void 0 : selectedOptionElement.click();
                     break;
                 case "Escape":
                     event.preventDefault();
                     this.collapse();
                     break;
             }
-            this.selectOption(selectedOptionIndex);
+            __classPrivateFieldGet(this, _selectOption).call(this, selectedOptionIndex);
         }
-    }
-    selectOption(index) {
-        if (index < 0) {
-            index = this.optionTargets.length - 1;
-        }
-        else if (index > this.optionTargets.length - 1) {
-            index = 0;
-        }
-        this.optionTargets.forEach(target => target.setAttribute("aria-selected", "false"));
-        if (this.optionTargets[index]) {
-            this.optionTargets[index].setAttribute("aria-selected", "true");
-            this.comboboxTarget.setAttribute("aria-activedescendant", this.optionTargets[index].id);
-        }
-    }
-    get selectedOptionElement() {
-        return this.optionTargets.find(target => target.getAttribute("aria-selected") == "true");
-    }
-    get isExpanded() {
-        return this.comboboxTarget.getAttribute("aria-expanded") == "true";
-    }
-    set isExpanded(value) {
-        this.comboboxTarget.setAttribute("aria-expanded", value.toString());
     }
 }
+_selectOption = new WeakMap(), _comboboxToggled = new WeakMap();
 default_1$4.targets = ["combobox", "listbox", "option"];
+function selectedOptionFrom(elements) {
+    return elements.find(element => booleanAttribute(element, "aria-selected"));
+}
 
+var _trapScroll, _releaseScroll, _trapFocus, _releaseFocus, _observeMutations, _withoutObservingMutations;
 class dialog_controller extends Controller {
     constructor() {
         super(...arguments);
-        this.trapScroll = () => {
+        _trapScroll.set(this, () => {
             document.documentElement.style.overflow = "hidden";
-            this.element.addEventListener("close", this.releaseScroll, { once: true });
-        };
-        this.releaseScroll = () => {
+            this.element.addEventListener("close", __classPrivateFieldGet(this, _releaseScroll), { once: true });
+        });
+        _releaseScroll.set(this, () => {
             document.documentElement.style.overflow = "";
-        };
-        this.trapFocus = () => {
+        });
+        _trapFocus.set(this, () => {
             siblingElements(this.element).forEach(element => element.inert = true);
-            this.element.addEventListener("close", this.releaseFocus, { once: true });
-        };
-        this.releaseFocus = () => {
+            this.element.addEventListener("close", __classPrivateFieldGet(this, _releaseFocus), { once: true });
+        });
+        _releaseFocus.set(this, () => {
             siblingElements(this.element).forEach(element => element.inert = false);
             if (this.previouslyActiveElement instanceof HTMLElement) {
                 this.previouslyActiveElement.isConnected && this.previouslyActiveElement.focus();
             }
-        };
+        });
+        _observeMutations.set(this, (attributeFilter = ["open"]) => {
+            this.observer.observe(this.element, { attributeFilter: attributeFilter });
+        });
+        _withoutObservingMutations.set(this, (callback) => {
+            this.observer.disconnect();
+            if (isHTMLDialogElement(this.element)) {
+                callback(this.element);
+            }
+            __classPrivateFieldGet(this, _observeMutations).call(this);
+        });
     }
     initialize() {
         this.observer = new MutationObserver(() => {
@@ -163,7 +201,7 @@ class dialog_controller extends Controller {
             this.element.open = false;
             this.showModal();
         }
-        this.observeMutations();
+        __classPrivateFieldGet(this, _observeMutations).call(this);
     }
     disconnect() {
         this.observer.disconnect();
@@ -172,28 +210,19 @@ class dialog_controller extends Controller {
         if (isOpen(this.element))
             return;
         this.previouslyActiveElement = document.activeElement;
-        this.withoutObservingMutations(dialogElement => dialogElement.showModal());
-        this.trapFocus();
-        this.trapScroll();
+        __classPrivateFieldGet(this, _withoutObservingMutations).call(this, dialogElement => dialogElement.showModal());
+        __classPrivateFieldGet(this, _trapFocus).call(this);
+        __classPrivateFieldGet(this, _trapScroll).call(this);
         focusFirstInteractiveElement(this.element);
         ensureLabel(this.element);
     }
     close() {
         if (isOpen(this.element)) {
-            this.withoutObservingMutations(dialogElement => dialogElement.close());
+            __classPrivateFieldGet(this, _withoutObservingMutations).call(this, dialogElement => dialogElement.close());
         }
-    }
-    observeMutations(attributeFilter = ["open"]) {
-        this.observer.observe(this.element, { attributeFilter: attributeFilter });
-    }
-    withoutObservingMutations(callback) {
-        this.observer.disconnect();
-        if (isHTMLDialogElement(this.element)) {
-            callback(this.element);
-        }
-        this.observeMutations();
     }
 }
+_trapScroll = new WeakMap(), _releaseScroll = new WeakMap(), _trapFocus = new WeakMap(), _releaseFocus = new WeakMap(), _observeMutations = new WeakMap(), _withoutObservingMutations = new WeakMap();
 function isOpen(element) {
     return isHTMLDialogElement(element) && element.open;
 }
@@ -229,10 +258,11 @@ function focusFirstInteractiveElement(element) {
     }
 }
 
+var _pushStateToElement, _pullStateFromElement;
 class default_1$3 extends Controller {
     constructor() {
         super(...arguments);
-        this.pushStateToElement = (expanded) => {
+        _pushStateToElement.set(this, (expanded) => {
             if (!this.controlsElement)
                 return;
             if (this.hasExpandedClass) {
@@ -244,8 +274,8 @@ class default_1$3 extends Controller {
             else {
                 this.controlsElement.hidden = !expanded;
             }
-        };
-        this.pullStateFromElement = () => {
+        });
+        _pullStateFromElement.set(this, () => {
             if (!this.controlsElement)
                 return;
             let isExpanded = false;
@@ -258,11 +288,11 @@ class default_1$3 extends Controller {
             else {
                 isExpanded = !this.controlsElement.hidden;
             }
-            this.isExpanded = isExpanded;
-        };
+            setExpanded(this.element, isExpanded);
+        });
     }
     initialize() {
-        this.elementStateObserver = new MutationObserver(this.pullStateFromElement);
+        this.elementStateObserver = new MutationObserver(__classPrivateFieldGet(this, _pullStateFromElement));
         this.attributesObserver = new MutationObserver(() => {
             this.elementStateObserver.disconnect();
             if (this.controlsElement) {
@@ -271,11 +301,11 @@ class default_1$3 extends Controller {
         });
     }
     connect() {
-        if (this.canExpand) {
-            this.pushStateToElement(this.isExpanded);
+        if (canExpand(this.element)) {
+            __classPrivateFieldGet(this, _pushStateToElement).call(this, isExpanded(this.element));
         }
         else {
-            this.pullStateFromElement();
+            __classPrivateFieldGet(this, _pullStateFromElement).call(this);
         }
         this.attributesObserver.observe(this.element, { attributeFilter: ["aria-controls"] });
         if (this.controlsElement) {
@@ -290,24 +320,20 @@ class default_1$3 extends Controller {
         if (isHTMLElement(this.element)) {
             this.element.focus();
         }
-        this.isExpanded = !this.isExpanded;
-        this.pushStateToElement(this.isExpanded);
-    }
-    set isExpanded(expanded) {
-        this.element.setAttribute("aria-expanded", expanded.toString());
-    }
-    get isExpanded() {
-        return this.element.getAttribute("aria-expanded") == "true";
-    }
-    get canExpand() {
-        return this.element.hasAttribute("aria-expanded");
+        const value = !isExpanded(this.element);
+        setExpanded(this.element, value);
+        __classPrivateFieldGet(this, _pushStateToElement).call(this, value);
     }
     get controlsElement() {
         const id = this.element.getAttribute("aria-controls") || "";
         return document.getElementById(id);
     }
 }
+_pushStateToElement = new WeakMap(), _pullStateFromElement = new WeakMap();
 default_1$3.classes = ["expanded"];
+function canExpand(element) {
+    return element.hasAttribute("aria-expanded");
+}
 function isHTMLElement(element) {
     return element instanceof HTMLElement;
 }
@@ -372,28 +398,81 @@ function updateSetSize(element, targets) {
     });
 }
 
+var _attachTabs, _disconnectTabpanelControlledBy, _disconnectTabInControlOfTabpanel, _activate, _isolateTabindex;
 class default_1$1 extends Controller {
+    constructor() {
+        super(...arguments);
+        _attachTabs.set(this, () => {
+            const [first] = this.tabTargets;
+            const selected = this.tabTargets.find(isSelected) || first;
+            const tabindexed = this.tabTargets.find(isTabindexed) || first;
+            if (selected)
+                __classPrivateFieldGet(this, _activate).call(this, selected);
+            if (tabindexed)
+                __classPrivateFieldGet(this, _isolateTabindex).call(this, tabindexed);
+        });
+        _disconnectTabpanelControlledBy.set(this, (tab) => {
+            const controls = tokensInAttribute(tab, "aria-controls");
+            for (const tabpanel of this.tabpanelTargets) {
+                if (controls.includes(tabpanel.id))
+                    tabpanel.remove();
+            }
+        });
+        _disconnectTabInControlOfTabpanel.set(this, (tabpanel) => {
+            for (const tab of this.tabTargets) {
+                const controls = tokensInAttribute(tabpanel, "aria-controls");
+                if (controls.includes(tabpanel.id))
+                    tab.remove();
+            }
+        });
+        _activate.set(this, (tab) => {
+            const controls = tokensInAttribute(tab, "aria-controls");
+            for (const target of this.tabpanelTargets) {
+                if (controls.includes(target.id)) {
+                    target.setAttribute("tabindex", "0");
+                    target.hidden = false;
+                }
+                else {
+                    target.setAttribute("tabindex", "-1");
+                    target.hidden = true;
+                }
+            }
+            for (const target of this.tabTargets) {
+                target.setAttribute("aria-selected", (target == tab).toString());
+            }
+        });
+        _isolateTabindex.set(this, (tab) => {
+            for (const target of this.tabTargets) {
+                if (target.contains(tab)) {
+                    target.setAttribute("tabindex", "0");
+                }
+                else {
+                    target.setAttribute("tabindex", "-1");
+                }
+            }
+        });
+    }
     tabTargetConnected() {
-        this.attachTabs();
+        __classPrivateFieldGet(this, _attachTabs).call(this);
     }
     tabTargetDisconnected(target) {
-        this.disconnectTabpanelControlledBy(target);
-        this.attachTabs();
+        __classPrivateFieldGet(this, _disconnectTabpanelControlledBy).call(this, target);
+        __classPrivateFieldGet(this, _attachTabs).call(this);
     }
     tabpanelTargetConnected(target) {
-        this.attachTabs();
+        __classPrivateFieldGet(this, _attachTabs).call(this);
     }
     tabpanelTargetDisconnected(target) {
-        this.disconnectTabInControlOfTabpanel(target);
-        this.attachTabs();
+        __classPrivateFieldGet(this, _disconnectTabInControlOfTabpanel).call(this, target);
+        __classPrivateFieldGet(this, _attachTabs).call(this);
     }
     isolateFocus({ target }) {
         if (target instanceof HTMLElement)
-            this.isolateTabindex(target);
+            __classPrivateFieldGet(this, _isolateTabindex).call(this, target);
     }
     select({ target }) {
         if (target instanceof HTMLElement)
-            this.activate(target);
+            __classPrivateFieldGet(this, _activate).call(this, target);
     }
     navigate(event) {
         const { key, target } = event;
@@ -444,60 +523,12 @@ class default_1$1 extends Controller {
                 if (this.deferSelectionValue)
                     return;
                 else
-                    this.activate(nextTab);
-            }
-        }
-    }
-    attachTabs() {
-        const [first] = this.tabTargets;
-        const selected = this.tabTargets.find(isSelected) || first;
-        const tabindexed = this.tabTargets.find(isTabindexed) || first;
-        if (selected)
-            this.activate(selected);
-        if (tabindexed)
-            this.isolateTabindex(tabindexed);
-    }
-    disconnectTabpanelControlledBy(tab) {
-        const controls = tokensInAttribute(tab, "aria-controls");
-        for (const tabpanel of this.tabpanelTargets) {
-            if (controls.includes(tabpanel.id))
-                tabpanel.remove();
-        }
-    }
-    disconnectTabInControlOfTabpanel(tabpanel) {
-        for (const tab of this.tabTargets) {
-            const controls = tokensInAttribute(tabpanel, "aria-controls");
-            if (controls.includes(tabpanel.id))
-                tab.remove();
-        }
-    }
-    activate(tab) {
-        const controls = tokensInAttribute(tab, "aria-controls");
-        for (const target of this.tabpanelTargets) {
-            if (controls.includes(target.id)) {
-                target.setAttribute("tabindex", "0");
-                target.hidden = false;
-            }
-            else {
-                target.setAttribute("tabindex", "-1");
-                target.hidden = true;
-            }
-        }
-        for (const target of this.tabTargets) {
-            target.setAttribute("aria-selected", (target == tab).toString());
-        }
-    }
-    isolateTabindex(tab) {
-        for (const target of this.tabTargets) {
-            if (target.contains(tab)) {
-                target.setAttribute("tabindex", "0");
-            }
-            else {
-                target.setAttribute("tabindex", "-1");
+                    __classPrivateFieldGet(this, _activate).call(this, nextTab);
             }
         }
     }
 }
+_attachTabs = new WeakMap(), _disconnectTabpanelControlledBy = new WeakMap(), _disconnectTabInControlOfTabpanel = new WeakMap(), _activate = new WeakMap(), _isolateTabindex = new WeakMap();
 default_1$1.targets = ["tablist", "tab", "tabpanel"];
 default_1$1.values = { deferSelection: Boolean };
 function tokensInAttribute(element, attribute) {

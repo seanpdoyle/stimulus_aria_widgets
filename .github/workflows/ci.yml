@@ -34,7 +34,6 @@ jobs:
           bundler-cache: true
 
       - run: yarn install
-      - run: yarn build
       - run: bin/rails test test/**/*_test.rb
 
       - name: Fail when generated changes are not checked-in

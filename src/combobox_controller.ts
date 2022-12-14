@@ -1,3 +1,4 @@
+import { booleanAttribute, isExpanded, setExpanded } from "./util"
 import { Controller } from "stimulus"
 
 export default class extends Controller {
@@ -12,7 +13,7 @@ export default class extends Controller {
     this.comboboxTarget.setAttribute("aria-controls", this.listboxTarget.id)
     this.comboboxTarget.setAttribute("aria-owns", this.listboxTarget.id)
 
-    this.expandedObserver = new MutationObserver(this.comboboxToggled)
+    this.expandedObserver = new MutationObserver(this.#comboboxToggled)
   }
 
   connect() {
@@ -25,19 +26,20 @@ export default class extends Controller {
 
   expand({ target }: InputEvent) {
     if (target instanceof HTMLInputElement) {
-      this.isExpanded = target.value.length > 0
+      setExpanded(this.comboboxTarget, target.value.length > 0)
     } else {
-      this.isExpanded = true
+      setExpanded(this.comboboxTarget, true)
     }
   }
 
   collapse() {
-    this.isExpanded = false
+    setExpanded(this.comboboxTarget, false)
   }
 
   navigate(event: KeyboardEvent) {
-    if (this.isExpanded) {
-      let selectedOptionIndex = this.selectedOptionElement ? this.optionTargets.indexOf(this.selectedOptionElement) : 0
+    if (isExpanded(this.comboboxTarget)) {
+      const selectedOptionElement = selectedOptionFrom(this.optionTargets)
+      let selectedOptionIndex = selectedOptionElement ? this.optionTargets.indexOf(selectedOptionElement) : 0
 
       switch (event.key) {
         case "ArrowUp":
@@ -58,7 +60,7 @@ export default class extends Controller {
           break
         case "Enter":
           event.preventDefault()
-          this.selectedOptionElement?.click()
+          selectedOptionElement?.click()
           break
         case "Escape":
             event.preventDefault()
@@ -66,11 +68,11 @@ export default class extends Controller {
           break
       }
 
-      this.selectOption(selectedOptionIndex)
+      this.#selectOption(selectedOptionIndex)
     }
   }
 
-  private selectOption(index: number) {
+  #selectOption = (index: number) => {
     if (index < 0) {
       index = this.optionTargets.length - 1
     } else if (index > this.optionTargets.length - 1) {
@@ -85,23 +87,15 @@ export default class extends Controller {
     }
   }
 
-  private comboboxToggled = () => {
-    if (this.isExpanded) {
+  #comboboxToggled = () => {
+    if (isExpanded(this.comboboxTarget)) {
       this.listboxTarget.hidden = false
     } else {
       this.listboxTarget.hidden = true
     }
   }
+}
 
-  private get selectedOptionElement() {
-    return this.optionTargets.find(target => target.getAttribute("aria-selected") == "true")
-  }
-
-  private get isExpanded() {
-    return this.comboboxTarget.getAttribute("aria-expanded") == "true"
-  }
-
-  private set isExpanded(value: boolean) {
-    this.comboboxTarget.setAttribute("aria-expanded", value.toString())
-  }
+function selectedOptionFrom(elements: HTMLElement[]): HTMLElement | undefined {
+  return elements.find(element => booleanAttribute(element, "aria-selected"))
 }

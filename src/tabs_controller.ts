@@ -10,29 +10,29 @@ export default class extends Controller {
   readonly tabpanelTargets!: HTMLElement[]
 
   tabTargetConnected() {
-    this.attachTabs()
+    this.#attachTabs()
   }
 
   tabTargetDisconnected(target: HTMLElement) {
-    this.disconnectTabpanelControlledBy(target)
-    this.attachTabs()
+    this.#disconnectTabpanelControlledBy(target)
+    this.#attachTabs()
   }
 
   tabpanelTargetConnected(target: HTMLElement) {
-    this.attachTabs()
+    this.#attachTabs()
   }
 
   tabpanelTargetDisconnected(target: HTMLElement) {
-    this.disconnectTabInControlOfTabpanel(target)
-    this.attachTabs()
+    this.#disconnectTabInControlOfTabpanel(target)
+    this.#attachTabs()
   }
 
   isolateFocus({ target }: FocusEvent) {
-    if (target instanceof HTMLElement) this.isolateTabindex(target)
+    if (target instanceof HTMLElement) this.#isolateTabindex(target)
   }
 
   select({ target }: Event) {
-    if (target instanceof HTMLElement) this.activate(target)
+    if (target instanceof HTMLElement) this.#activate(target)
   }
 
   navigate(event: KeyboardEvent) {
@@ -85,21 +85,21 @@ export default class extends Controller {
         nextTab.focus()
 
         if (this.deferSelectionValue) return
-        else this.activate(nextTab)
+        else this.#activate(nextTab)
       }
     }
   }
 
-  private attachTabs() {
+  #attachTabs = () => {
     const [ first ] = this.tabTargets
     const selected = this.tabTargets.find(isSelected) || first
     const tabindexed = this.tabTargets.find(isTabindexed) || first
 
-    if (selected) this.activate(selected)
-    if (tabindexed) this.isolateTabindex(tabindexed)
+    if (selected) this.#activate(selected)
+    if (tabindexed) this.#isolateTabindex(tabindexed)
   }
 
-  private disconnectTabpanelControlledBy(tab: HTMLElement) {
+  #disconnectTabpanelControlledBy = (tab: HTMLElement) => {
     const controls = tokensInAttribute(tab, "aria-controls")
 
     for (const tabpanel of this.tabpanelTargets) {
@@ -107,7 +107,7 @@ export default class extends Controller {
     }
   }
 
-  private disconnectTabInControlOfTabpanel(tabpanel: HTMLElement) {
+  #disconnectTabInControlOfTabpanel = (tabpanel: HTMLElement) => {
     for (const tab of this.tabTargets) {
       const controls = tokensInAttribute(tabpanel, "aria-controls")
 
@@ -115,7 +115,7 @@ export default class extends Controller {
     }
   }
 
-  private activate(tab: HTMLElement) {
+  #activate = (tab: HTMLElement) => {
     const controls = tokensInAttribute(tab, "aria-controls")
 
     for (const target of this.tabpanelTargets) {
@@ -133,7 +133,7 @@ export default class extends Controller {
     }
   }
 
-  private isolateTabindex(tab: HTMLElement) {
+  #isolateTabindex = (tab: HTMLElement) => {
     for (const target of this.tabTargets) {
       if (target.contains(tab)) {
         target.setAttribute("tabindex", "0")

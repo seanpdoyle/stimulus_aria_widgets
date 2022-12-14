@@ -1,5 +1,6 @@
 import { Controller } from "stimulus";
 export default class extends Controller {
+    #private;
     static targets: string[];
     static values: {
         deferSelection: BooleanConstructor;
@@ -15,10 +16,5 @@ export default class extends Controller {
     isolateFocus({ target }: FocusEvent): void;
     select({ target }: Event): void;
     navigate(event: KeyboardEvent): void;
-    private attachTabs;
-    private disconnectTabpanelControlledBy;
-    private disconnectTabInControlOfTabpanel;
-    private activate;
-    private isolateTabindex;
 }
 //# sourceMappingURL=tabs_controller.d.ts.map
