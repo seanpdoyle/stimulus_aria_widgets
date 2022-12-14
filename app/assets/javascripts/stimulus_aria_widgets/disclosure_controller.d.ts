@@ -1,5 +1,6 @@
 import { Controller } from "stimulus";
 export default class extends Controller {
+    #private;
     static classes: string[];
     attributesObserver: MutationObserver;
     elementStateObserver: MutationObserver;
@@ -9,11 +10,6 @@ export default class extends Controller {
     connect(): void;
     disconnect(): void;
     toggle(): void;
-    private pushStateToElement;
-    private pullStateFromElement;
-    private set isExpanded(value);
-    private get isExpanded();
-    private get canExpand();
     get controlsElement(): HTMLElement | null;
 }
 //# sourceMappingURL=disclosure_controller.d.ts.map

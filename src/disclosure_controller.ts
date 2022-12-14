@@ -1,4 +1,4 @@
-import { isHTMLDialogElement } from "./util.js"
+import { isExpanded, isHTMLDialogElement, setExpanded } from "./util.js"
 import { Controller } from "stimulus"
 
 export default class extends Controller {
@@ -10,7 +10,7 @@ export default class extends Controller {
   expandedClass!: string
 
   initialize() {
-    this.elementStateObserver = new MutationObserver(this.pullStateFromElement)
+    this.elementStateObserver = new MutationObserver(this.#pullStateFromElement)
     this.attributesObserver = new MutationObserver(() => {
       this.elementStateObserver.disconnect()
 
@@ -21,10 +21,10 @@ export default class extends Controller {
   }
 
   connect() {
-    if (this.canExpand) {
-      this.pushStateToElement(this.isExpanded)
+    if (canExpand(this.element)) {
+      this.#pushStateToElement(isExpanded(this.element))
     } else {
-      this.pullStateFromElement()
+      this.#pullStateFromElement()
     }
     this.attributesObserver.observe(this.element, { attributeFilter: [ "aria-controls" ] })
     if (this.controlsElement) {
@@ -41,11 +41,12 @@ export default class extends Controller {
     if (isHTMLElement(this.element)) {
       this.element.focus()
     }
-    this.isExpanded = !this.isExpanded
-    this.pushStateToElement(this.isExpanded)
+    const value = !isExpanded(this.element)
+    setExpanded(this.element, value)
+    this.#pushStateToElement(value)
   }
 
-  private pushStateToElement = (expanded: boolean) => {
+  #pushStateToElement = (expanded: boolean) => {
     if (!this.controlsElement) return
 
     if (this.hasExpandedClass) {
@@ -57,7 +58,7 @@ export default class extends Controller {
     }
   }
 
-  private pullStateFromElement = () => {
+  #pullStateFromElement = () => {
     if (!this.controlsElement) return
 
     let isExpanded = false
@@ -69,19 +70,7 @@ export default class extends Controller {
       isExpanded = !this.controlsElement.hidden
     }
 
-    this.isExpanded = isExpanded
-  }
-
-  private set isExpanded(expanded: boolean) {
-    this.element.setAttribute("aria-expanded", expanded.toString())
-  }
-
-  private get isExpanded() {
-    return this.element.getAttribute("aria-expanded") == "true"
-  }
-
-  private get canExpand() {
-    return this.element.hasAttribute("aria-expanded")
+    setExpanded(this.element, isExpanded)
   }
 
   get controlsElement(): HTMLElement | null {
@@ -89,6 +78,10 @@ export default class extends Controller {
 
     return document.getElementById(id)
   }
+}
+
+function canExpand(element: Element): boolean {
+  return element.hasAttribute("aria-expanded")
 }
 
 function isHTMLElement(element: Element): element is HTMLElement {

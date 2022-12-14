@@ -1,5 +1,6 @@
 import { Controller } from "stimulus";
 export default class extends Controller {
+    #private;
     static targets: string[];
     comboboxTarget: HTMLElement;
     optionTargets: HTMLElement[];
@@ -11,10 +12,5 @@ export default class extends Controller {
     expand({ target }: InputEvent): void;
     collapse(): void;
     navigate(event: KeyboardEvent): void;
-    private selectOption;
-    private comboboxToggled;
-    private get selectedOptionElement();
-    private get isExpanded();
-    private set isExpanded(value);
 }
 //# sourceMappingURL=combobox_controller.d.ts.map

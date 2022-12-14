@@ -1,5 +1,19 @@
 type InertElement = Element & { inert: boolean }
 
+export function booleanAttribute(element: Element, attributeName: string): boolean {
+  const value = element.getAttribute(attributeName)
+
+  return value == "" || /true/i.test(value || "")
+}
+
+export function setExpanded(element: Element, value: boolean) {
+  element.setAttribute("aria-expanded", value.toString())
+}
+
+export function isExpanded(element: Element): boolean {
+  return booleanAttribute(element, "aria-expanded")
+}
+
 export function isHTMLDialogElement(node: Node): node is HTMLDialogElement {
   return node instanceof Element && node.localName == "dialog"
 }

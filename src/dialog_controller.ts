@@ -24,7 +24,7 @@ export default class extends Controller {
       this.element.open = false
       this.showModal()
     }
-    this.observeMutations()
+    this.#observeMutations()
   }
 
   disconnect() {
@@ -36,10 +36,10 @@ export default class extends Controller {
 
     this.previouslyActiveElement = document.activeElement
 
-    this.withoutObservingMutations(dialogElement => dialogElement.showModal())
+    this.#withoutObservingMutations(dialogElement => dialogElement.showModal())
 
-    this.trapFocus()
-    this.trapScroll()
+    this.#trapFocus()
+    this.#trapScroll()
 
     focusFirstInteractiveElement(this.element)
     ensureLabel(this.element)
@@ -47,26 +47,26 @@ export default class extends Controller {
 
   close() {
     if (isOpen(this.element)) {
-      this.withoutObservingMutations(dialogElement => dialogElement.close())
+      this.#withoutObservingMutations(dialogElement => dialogElement.close())
     }
   }
 
-  private trapScroll = () => {
+  #trapScroll = () => {
     document.documentElement.style.overflow = "hidden"
-    this.element.addEventListener("close", this.releaseScroll, { once: true })
+    this.element.addEventListener("close", this.#releaseScroll, { once: true })
   }
 
-  private releaseScroll = () => {
+  #releaseScroll = () => {
     document.documentElement.style.overflow = ""
   }
 
-  private trapFocus = () => {
+  #trapFocus = () => {
     siblingElements(this.element).forEach(element => element.inert = true)
 
-    this.element.addEventListener("close", this.releaseFocus, { once: true })
+    this.element.addEventListener("close", this.#releaseFocus, { once: true })
   }
 
-  private releaseFocus = () => {
+  #releaseFocus = () => {
     siblingElements(this.element).forEach(element => element.inert = false)
 
     if (this.previouslyActiveElement instanceof HTMLElement) {
@@ -74,18 +74,18 @@ export default class extends Controller {
     }
   }
 
-  private observeMutations(attributeFilter = [ "open" ]) {
+  #observeMutations = (attributeFilter = [ "open" ]) => {
     this.observer.observe(this.element, { attributeFilter: attributeFilter })
   }
 
-  private withoutObservingMutations(callback: (dialog: HTMLDialogElement) => void) {
+  #withoutObservingMutations = (callback: (dialog: HTMLDialogElement) => void) => {
     this.observer.disconnect()
 
     if (isHTMLDialogElement(this.element)) {
       callback(this.element)
     }
 
-    this.observeMutations()
+    this.#observeMutations()
   }
 }
 
