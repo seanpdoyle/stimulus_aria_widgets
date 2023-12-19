@@ -127,7 +127,7 @@ template][].
 [System Tests]: ./test/system
 [example template]: ./test/dummy/app/views/examples/index.html.erb
 
-### [Combobox](https://www.w3.org/TR/wai-aria-practices/#combobox)
+### [Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox)
 
 ```js
 import { Application, Controller } from "stimulus"
@@ -186,7 +186,7 @@ Targets:
 
 * `navigate(KeyboardEvent)`
 
-### [Disclosure](https://www.w3.org/TR/wai-aria-practices/#disclosure)
+### [Disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure)
 
 Toggling a `<details>` element
 
@@ -248,7 +248,7 @@ Toggling a CSS class on an element
 
 * `toggle(Event)`
 
-### [Dialog](https://www.w3.org/TR/wai-aria-practices/#dialog_modal)
+### [Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog_modal)
 
 Combined with a [Disclosure](#Disclosure), toggle a `<dialog>` element
 
@@ -301,7 +301,7 @@ Calls to `aria.dialog.tag` default to rendering `<dialog>` elements
 
 * `close(Event)`
 
-### [Feed](https://www.w3.org/TR/wai-aria-practices/#feed)
+### [Feed](https://www.w3.org/WAI/ARIA/apg/patterns/feed)
 
 ```js
 import { Application, Controller } from "stimulus"
@@ -339,7 +339,7 @@ Targets:
 
 * `navigate(KeyboardEvent)`
 
-### [Tabs](https://www.w3.org/TR/wai-aria-practices-1.2/#tabpanel)
+### [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs)
 
 View content nested within [role="tabpanel"][] elements by navigating
 a collection of [role="tab"][] elements nested within a [role="tablist"][]
@@ -415,7 +415,7 @@ When `defer_selection_value:` is provided, renders:
 * `navigate(KeyboardEvent)`
 * `select(Event)`
 
-### [Grid](https://www.w3.org/TR/wai-aria-practices-1.2/#grid)
+### [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid)
 
 A [role="grid"][] widget is a container that enables users to navigate the
 information or interactive elements it contains using directional navigation
